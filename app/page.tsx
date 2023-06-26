@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect, lazy } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import LoginPage from "./login/page";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "./firebase";
 
 const HomePage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
       if (currentUser) {
         setIsLoggedIn(true);
       } else {
@@ -27,7 +29,13 @@ const HomePage = () => {
   }
 
   return (
-    <>{isLoggedIn ? <div>Hi, you&apos;re logged in</div> : <LoginPage />}</>
+    <>
+      {isLoggedIn ? (
+        <div>Hi, you&apos;re logged in</div>
+      ) : (
+        router.push("/login")
+      )}
+    </>
   );
 };
 
