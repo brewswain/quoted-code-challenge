@@ -31,15 +31,22 @@ export const emailSignIn = async (email: string, password: string) => {
   }
 };
 
-export const emailSignUp = async (email: string, password: string) => {
+export interface RegistrationPayload {
+  userName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  profilePicture?: string;
+}
+export const emailSignUp = async (registrationPayload: RegistrationPayload) => {
   try {
     const response = await createUserWithEmailAndPassword(
       firebaseAuth,
-      email,
-      password
+      registrationPayload.email,
+      registrationPayload.password
     );
 
-    await addUserToDB(email, response.user.uid);
+    await addUserToDB(registrationPayload, response.user.uid);
     return response;
   } catch (error) {
     genericErrorToastNotify();
