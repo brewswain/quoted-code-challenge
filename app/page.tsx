@@ -1,15 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, lazy } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LoginPage from "./login/page";
 
 const HomePage = () => {
-  // TODO: change this into a server component--since we want to use google auth we should be able to do a data fetch to see if user is logged in.
-  // That being said, we want non-logged in users to be able to see  the feed, but they need to be logged in to use the app itself
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    // Cleanup the event listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  if (isLoggedIn === null) {
+    // Handle the loading state while authentication status is being determined
+    return <div>Loading...</div>;
+  }
 
   return (
-    <>{isLoggedIn ? <div>hi you&rsquo;re logged in</div> : <LoginPage />}</>
+    <>{isLoggedIn ? <div>Hi, you&apos;re logged in</div> : <LoginPage />}</>
   );
 };
 
