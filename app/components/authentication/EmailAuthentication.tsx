@@ -1,6 +1,8 @@
 "use client";
 
 import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { emailSignIn, emailSignUp } from "@/app/firebase/authentication";
@@ -14,9 +16,8 @@ interface EmailSignInProps {
   email: string;
   password: string;
 }
-const auth = getAuth();
 
-const EmailSignIn = () => {
+const EmailAuthentication = () => {
   // onAuthStateChanged(auth, (currentUser) => {
   //   if (currentUser) {
   //     console.log({ currentUser });
@@ -124,4 +125,4 @@ const EmailSignIn = () => {
   );
 };
 
-export default EmailSignIn;
+export default EmailAuthentication;
