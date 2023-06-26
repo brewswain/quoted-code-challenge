@@ -9,5 +9,7 @@ export const getUserFromDB = async (uid: string) => {
   if (userSnapshot.exists()) {
     const docData = userSnapshot.data();
     console.log(`Data returned: ${JSON.stringify(docData)}`);
+
+    return docData;
   }
 };
