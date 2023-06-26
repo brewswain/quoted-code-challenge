@@ -3,14 +3,13 @@
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 import { emailSignIn, emailSignUp } from "@/app/firebase/authentication";
 import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import { genericErrorToastNotify } from "@/app/errors";
+import { addUserToDB } from "@/app/firebase/firestore/addUser";
 
 interface EmailSignInProps {
   email: string;
@@ -54,7 +53,29 @@ const EmailAuthentication = () => {
         authenticationPayload
       );
 
-      await emailSignIn(
+      const response = await emailSignIn(
+        validatedAuthenticationPayload.email,
+        validatedAuthenticationPayload.password
+      );
+
+      if (response) {
+        toast.success("User successfully logged in, redirecting to feed.");
+        setAuthenticationPayload({ email: "", password: "" });
+        router.push("/");
+      }
+    } catch (error) {
+      genericErrorToastNotify();
+      console.error(error);
+    }
+  };
+
+  const handleSignUp = async () => {
+    try {
+      const validatedAuthenticationPayload = authenticationPayloadSchema.parse(
+        authenticationPayload
+      );
+
+      const response = await emailSignUp(
         validatedAuthenticationPayload.email,
         validatedAuthenticationPayload.password
       );
@@ -67,23 +88,11 @@ const EmailAuthentication = () => {
     router.push("/");
   };
 
-  const handleSignUp = async () => {
-    try {
-      const validatedAuthenticationPayload = authenticationPayloadSchema.parse(
-        authenticationPayload
-      );
-
-      await emailSignUp(
-        validatedAuthenticationPayload.email,
-        validatedAuthenticationPayload.password
-      );
-    } catch (error) {
-      genericErrorToastNotify();
-      console.error(error);
+  const handleKeypress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // It triggers by pressing the enter key
+    if (event.key === "Enter") {
+      handleSignIn();
     }
-
-    setAuthenticationPayload({ email: "", password: "" });
-    router.push("/");
   };
 
   return (
@@ -106,6 +115,7 @@ const EmailAuthentication = () => {
             name="password"
             onChange={handleChange}
             value={authenticationPayload.password}
+            onKeyDown={handleKeypress}
             className={"text-black self-end w-full py-1 rounded"}
           />
         </div>
