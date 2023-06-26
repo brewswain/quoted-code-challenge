@@ -6,10 +6,11 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithRedirect,
+  signOut,
 } from "firebase/auth";
 
 import { firebaseAuth } from "./index";
-import { genericErrorToastNotify } from "../errors";
+import { genericErrorToastNotify, signOutErrorToastNotify } from "../errors";
 
 const provider = new GoogleAuthProvider();
 
@@ -40,7 +41,7 @@ export const emailSignUp = async (email: string, password: string) => {
   }
 };
 
-const popupSignIn = async () => {
+export const popupSignIn = async () => {
   try {
     const response = await signInWithPopup(firebaseAuth, provider);
   } catch (error) {
@@ -49,10 +50,18 @@ const popupSignIn = async () => {
 };
 
 // For mobiles
-const redirectAuthentication = async () => {
+export const redirectAuthentication = async () => {
   try {
     const response = await signInWithRedirect(firebaseAuth, provider);
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const firebaseSignOut = async () => {
+  try {
+    signOut(firebaseAuth);
+  } catch (error) {
+    signOutErrorToastNotify();
   }
 };
