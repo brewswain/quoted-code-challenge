@@ -18,11 +18,7 @@ interface EmailSignInProps {
 }
 
 const EmailAuthentication = () => {
-  // onAuthStateChanged(auth, (currentUser) => {
-  //   if (currentUser) {
-  //     console.log({ currentUser });
-  //   }
-  // });
+  const router = useRouter();
 
   const [authenticationPayload, setAuthenticationPayload] =
     useState<EmailSignInProps>({
@@ -68,6 +64,7 @@ const EmailAuthentication = () => {
     }
 
     setAuthenticationPayload({ email: "", password: "" });
+    router.push("/");
   };
 
   const handleSignUp = async () => {
@@ -86,38 +83,45 @@ const EmailAuthentication = () => {
     }
 
     setAuthenticationPayload({ email: "", password: "" });
+    router.push("/");
   };
 
   return (
-    <div className="flex flex-col items-center ">
-      <div className="flex flex-col">
-        <label className="flex  py-4 justify-center items-end self-end">
-          Email: 
+    <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
+      <div className="flex flex-col w-9/12">
+        <div className="flex-col py-2">
+          <label className="flex py-1">Email: </label>
           <input
             type="email"
             name="email"
             onChange={handleChange}
             value={authenticationPayload.email}
-            className="text-black "
+            className="text-black w-full py-1 rounded"
           />
-        </label>
-        <label className="flex  py-4 justify-center items-end self-end">
-          Password: 
+        </div>
+        <div className="flex-col  py-2">
+          <label className="flex py-1">Password: </label>
           <input
             type="password"
             name="password"
             onChange={handleChange}
             value={authenticationPayload.password}
-            className={"text-black self-end"}
+            className={"text-black self-end w-full py-1 rounded"}
           />
-        </label>
+        </div>
       </div>
-      <div className="flex items-end justify-center py-4">
-        <button type="button" onClick={() => handleSignIn()} className="px-8">
+      <div className="flex items-end justify-center py-4  w-9/12 ">
+        <button
+          className="bg-green-500 w-full py-2 rounded"
+          type="button"
+          onClick={() => handleSignIn()}
+        >
           Sign In
         </button>
-        <button type="button" onClick={handleSignUp}>
-          Register
+      </div>
+      <div className="flex items-end justify-center border border-slate-700 w-9/12 rounded">
+        <button type="button" onClick={handleSignUp} className="py-2">
+          Sign Up
         </button>
       </div>
       <ToastContainer position="bottom-center" />
