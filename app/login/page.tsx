@@ -3,9 +3,9 @@ import EmailAuthentication from "../components/authentication/EmailAuthenticatio
 
 const LoginPage = () => {
   return (
-    <>
+    <main>
       <EmailAuthentication />
-    </>
+    </main>
   );
 };
 
