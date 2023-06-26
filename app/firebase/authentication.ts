@@ -1,4 +1,5 @@
 import {
+  getAuth,
   onAuthStateChanged,
   signInWithPopup,
   signInWithEmailAndPassword,
@@ -8,10 +9,11 @@ import {
 } from "firebase/auth";
 
 import { firebaseAuth } from "./index";
+import { genericErrorToastNotify } from "../errors";
 
 const provider = new GoogleAuthProvider();
 
-export const emailAuthentication = async (email: string, password: string) => {
+export const emailSignIn = async (email: string, password: string) => {
   try {
     const response = await signInWithEmailAndPassword(
       firebaseAuth,
@@ -20,11 +22,25 @@ export const emailAuthentication = async (email: string, password: string) => {
     );
     console.log({ response });
   } catch (error) {
-    console.error(error);
+    console.error("error");
+    genericErrorToastNotify();
+    return error;
+  }
+};
+export const emailSignUp = async (email: string, password: string) => {
+  try {
+    const response = await createUserWithEmailAndPassword(
+      firebaseAuth,
+      email,
+      password
+    );
+    console.log({ response });
+  } catch (error) {
+    genericErrorToastNotify();
   }
 };
 
-const popupAuthentication = async () => {
+const popupSignIn = async () => {
   try {
     const response = await signInWithPopup(firebaseAuth, provider);
   } catch (error) {
