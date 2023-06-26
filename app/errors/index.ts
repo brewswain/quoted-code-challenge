@@ -5,3 +5,9 @@ import { toast } from "react-toastify";
 export const genericErrorToastNotify = () =>
   // Toast is left purposefully vague for security purposes--use this for stuff like authentication problems
   toast("Something went wrong :( Please check your details and try again");
+
+export const signOutErrorToastNotify = () => {
+  toast(
+    "Couldn't Sign out. This is probably not Quoted's fault, please try again"
+  );
+};
