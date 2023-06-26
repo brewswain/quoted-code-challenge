@@ -69,25 +69,6 @@ const EmailAuthentication = () => {
     }
   };
 
-  const handleSignUp = async () => {
-    try {
-      const validatedAuthenticationPayload = authenticationPayloadSchema.parse(
-        authenticationPayload
-      );
-
-      const response = await emailSignUp(
-        validatedAuthenticationPayload.email,
-        validatedAuthenticationPayload.password
-      );
-    } catch (error) {
-      genericErrorToastNotify();
-      console.error(error);
-    }
-
-    setAuthenticationPayload({ email: "", password: "" });
-    router.push("/");
-  };
-
   const handleKeypress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     // It triggers by pressing the enter key
     if (event.key === "Enter") {
@@ -130,8 +111,12 @@ const EmailAuthentication = () => {
         </button>
       </div>
       <div className="flex items-end justify-center border border-slate-700 w-9/12 rounded">
-        <button type="button" onClick={handleSignUp} className="py-2">
-          Sign Up
+        <button
+          type="button"
+          onClick={() => router.push("/register")}
+          className="py-2"
+        >
+          Create a new Account
         </button>
       </div>
       <ToastContainer position="bottom-center" />
