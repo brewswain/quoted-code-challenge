@@ -11,9 +11,11 @@ import {
 
 import { firebaseAuth } from "./index";
 import { genericErrorToastNotify, signOutErrorToastNotify } from "../errors";
+import { addUserToDB } from "./firestore/addUser";
 
 const provider = new GoogleAuthProvider();
 
+// addUserToDB is used here to ensure that our user has the same UID both within firebase's authentication system, and our firestore db.
 export const emailSignIn = async (email: string, password: string) => {
   try {
     const response = await signInWithEmailAndPassword(
@@ -21,13 +23,14 @@ export const emailSignIn = async (email: string, password: string) => {
       email,
       password
     );
-    console.log({ response });
+    return response;
   } catch (error) {
     console.error("error");
     genericErrorToastNotify();
     return error;
   }
 };
+
 export const emailSignUp = async (email: string, password: string) => {
   try {
     const response = await createUserWithEmailAndPassword(
@@ -35,7 +38,9 @@ export const emailSignUp = async (email: string, password: string) => {
       email,
       password
     );
-    console.log({ response });
+
+    await addUserToDB(email, response.user.uid);
+    return response;
   } catch (error) {
     genericErrorToastNotify();
   }
