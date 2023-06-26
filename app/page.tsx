@@ -14,8 +14,7 @@ const HomePage = () => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
       if (currentUser) {
         setIsLoggedIn(true);
-        console.log({ currentUser });
-      } else {
+      } else if (!currentUser) {
         setIsLoggedIn(false);
       }
     });
@@ -27,6 +26,8 @@ const HomePage = () => {
   useEffect(() => {
     if (isLoggedIn === false) {
       router.push("/login");
+    } else if (isLoggedIn === true) {
+      router.push(`/feed`);
     }
   }, [isLoggedIn, router]);
 
@@ -35,11 +36,7 @@ const HomePage = () => {
     return <div>Loading...</div>;
   }
 
-  return (
-    <>
-      <div>Hi, you&apos;re logged in</div>
-    </>
-  );
+  return;
 };
 
 export default HomePage;
