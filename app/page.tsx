@@ -7,13 +7,14 @@ import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./firebase";
 
 const HomePage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
       if (currentUser) {
         setIsLoggedIn(true);
+        console.log({ currentUser });
       } else {
         setIsLoggedIn(false);
       }
@@ -23,6 +24,12 @@ const HomePage = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (isLoggedIn === false) {
+      router.push("/login");
+    }
+  }, [isLoggedIn, router]);
+
   if (isLoggedIn === null) {
     // Handle the loading state while authentication status is being determined
     return <div>Loading...</div>;
@@ -30,11 +37,7 @@ const HomePage = () => {
 
   return (
     <>
-      {isLoggedIn ? (
-        <div>Hi, you&apos;re logged in</div>
-      ) : (
-        router.push("/login")
-      )}
+      <div>Hi, you&apos;re logged in</div>
     </>
   );
 };
