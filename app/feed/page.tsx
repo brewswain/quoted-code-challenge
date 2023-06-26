@@ -1,17 +1,39 @@
 "use client";
+
+import { useState, useEffect } from "react";
+
+import { useRouter } from "next/navigation";
+
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "../firebase";
 import { firebaseSignOut } from "../firebase/authentication";
 import { getUserFromDB } from "../firebase/firestore/getUser";
 
 const FeedPage = () => {
-  onAuthStateChanged(firebaseAuth, (currentUser) => {
-    console.log({ currentUser });
+  const [isNewAccount, setIsNewAccount] = useState<boolean | null>(null);
 
-    if (currentUser) {
-      getUserFromDB(currentUser.uid);
-    }
-  });
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      firebaseAuth,
+      async (currentUser) => {
+        if (currentUser) {
+          const user = await getUserFromDB(currentUser.uid);
+
+          if (user) {
+            if (user.user_name) {
+              console.log("not a new account");
+              return null;
+            } else {
+            }
+          }
+        }
+      }
+    );
+    // Cleanup the event listener on component unmount
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div>
