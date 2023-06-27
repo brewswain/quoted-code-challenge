@@ -23,7 +23,6 @@ const FeedPage = () => {
 
           if (user) {
             if (user.user_name) {
-              console.log("not a new account");
               return null;
             } else {
             }

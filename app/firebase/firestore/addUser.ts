@@ -10,7 +10,6 @@ export const addUserToDB = async (
   const { userName, email, profilePicture } = registrationPayload;
 
   const userDocument = doc(firestoreDb, `users/${uid}`);
-
   try {
     const docRef = await setDoc(userDocument, {
       user_name: userName,
