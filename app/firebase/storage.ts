@@ -33,5 +33,6 @@ export const getRandomPlaceholderImage = async () => {
   // That being said, if we were to use a more complex method where we'd want to reuse a function with a variety of different arguments, then currying
   // would actually be worth it from a modularity and reusability angle.
   const downloadURL = await getDownloadURL(randomImage);
+
   return downloadURL;
 };

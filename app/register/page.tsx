@@ -136,7 +136,6 @@ const RegisterPage = () => {
     const fetchPlaceholder = async () => {
       try {
         const response = await getRandomPlaceholderImage();
-        console.log({ response });
 
         if (componentIsMounted) {
           setRegistrationPayload({
