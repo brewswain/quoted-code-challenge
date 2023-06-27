@@ -11,3 +11,7 @@ export const signOutErrorToastNotify = () => {
     "Couldn't Sign out. This is probably not Quoted's fault, please try again"
   );
 };
+
+export const fileUploadErrorToastNotify = () => {
+  toast("An error occurred while attempting to upload file.");
+};
