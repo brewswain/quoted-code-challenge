@@ -12,7 +12,8 @@
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 22,27,34;
-    --background-end-rgb: 22,27,34
+    --background-end-rgb: 22,27,34;
+    --icon-button-rgb: 190, 24, 93;
   }
 }
 
