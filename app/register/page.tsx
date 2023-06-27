@@ -1,13 +1,21 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
+
 import { emailSignUp } from "@/app/firebase/authentication";
+
+import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
+import { v4 as uuid } from "uuid";
+
 import { genericErrorToastNotify } from "../errors";
 
 import "react-toastify/dist/ReactToastify.css";
+import {
+  getRandomPlaceholderImage,
+  uploadProfilePicture,
+} from "../firebase/storage";
 
 interface CustomerDetails {
   userName: string;
@@ -24,10 +32,9 @@ const RegisterPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      // Placeholder for now, will give proper placeholder image once profile picture functionality is sorted
-      profilePicture:
-        "https://cdn.vox-cdn.com/thumbor/9wWAcq-G4SdBYX8_8MSVSx94WkI=/1400x788/filters:format(png)/cdn.vox-cdn.com/uploads/chorus_asset/file/23761868/Screen_Shot_2022_07_12_at_10.55.30_AM.png",
+      profilePicture: "",
     });
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -47,7 +54,7 @@ const RegisterPage = () => {
         message:
           "Please ensure that your password is at least 8 characters long",
       }),
-      profilePicture: z.string().optional(),
+      profilePicture: z.any().optional(),
     })
     .superRefine(({ confirmPassword, password }, ctx) => {
       if (confirmPassword !== password) {
@@ -63,23 +70,38 @@ const RegisterPage = () => {
     });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { name, value, files } = event.target;
 
-    console.log({ name, value });
+    if (name === "profilePicture" && files !== null) {
+      const picture = files[0];
 
-    setRegistrationPayload({
-      ...registrationPayload,
-      [name]: value,
-    });
+      setProfilePicture(picture);
+    } else {
+      setRegistrationPayload({
+        ...registrationPayload,
+        [name]: value,
+      });
+    }
   };
 
   const handleSignUp = async () => {
     try {
+      if (profilePicture !== null) {
+        try {
+          const response = await uploadProfilePicture(
+            profilePicture,
+            profilePicture.name + uuid()
+          );
+          setRegistrationPayload({
+            ...registrationPayload,
+            profilePicture: response,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      }
       const validatedAuthenticationPayload =
         registrationPayloadSchema.parse(registrationPayload);
-      const { userName, email, password, confirmPassword, profilePicture } =
-        validatedAuthenticationPayload;
-
       const response = await emailSignUp(validatedAuthenticationPayload);
 
       if (response) {
@@ -100,17 +122,46 @@ const RegisterPage = () => {
   };
 
   const handleKeypress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // It triggers by pressing the enter key
     if (event.key === "Enter") {
       handleSignUp();
     }
   };
 
+  useEffect(() => {
+    // While I wouldn't normally be too worried about a potential memory leak here since it's a one time API call on mount,
+    // the API being from a 3rd party that is usually subscription heavy(firebase) suggests that it pays to be cognizant
+    // of the possibility of aforementioned memory leak. Plus cleanup functions tend to be good practise in most cases.
+    let componentIsMounted = true;
+
+    const fetchPlaceholder = async () => {
+      try {
+        const response = await getRandomPlaceholderImage();
+        console.log({ response });
+
+        if (componentIsMounted) {
+          setRegistrationPayload({
+            ...registrationPayload,
+            profilePicture: response,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPlaceholder();
+
+    return () => {
+      componentIsMounted = false;
+    };
+  }, []);
+
   return (
     <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
       <div className="flex flex-col w-9/12">
         <div className="flex-col py-2">
-          <label className="flex py-1">Username: </label>
+          <label className="flex py-1">
+            Username:<span className="text-red-400">*</span>  
+          </label>
           <input
             type="string"
             name="userName"
@@ -120,7 +171,9 @@ const RegisterPage = () => {
           />
         </div>
         <div className="flex-col py-2">
-          <label className="flex py-1">Email: </label>
+          <label className="flex py-1">
+            Email:<span className="text-red-400">*</span>  
+          </label>
           <input
             type="email"
             name="email"
@@ -130,7 +183,9 @@ const RegisterPage = () => {
           />
         </div>
         <div className="flex-col  py-2">
-          <label className="flex py-1">Password: </label>
+          <label className="flex py-1">
+            Password:<span className="text-red-400">*</span>  
+          </label>
           <input
             type="password"
             name="password"
@@ -141,7 +196,9 @@ const RegisterPage = () => {
           />
         </div>
         <div className="flex-col  py-2">
-          <label className="flex py-1">Confirm Password: </label>
+          <label className="flex py-1">
+            Confirm Password:<span className="text-red-400">*</span>  
+          </label>
           <input
             type="password"
             name="confirmPassword"
@@ -152,17 +209,16 @@ const RegisterPage = () => {
           />
         </div>
         {/* Just placed here for conceptual layout, will be replaced with a file uploader when file storage is configured*/}
-        {/* <div className="flex-col  py-2">
+        <div className="flex-col  py-2">
           <label className="flex py-1">Profile Picture: </label>
           <input
-            type="password"
-            name="password"
+            type="file"
+            name="profilePicture"
             onChange={handleChange}
-            value={registrationPayload.confirmPassword}
             onKeyDown={handleKeypress}
             className={"text-black self-end w-full py-1 rounded"}
           />
-        </div> */}
+        </div>
       </div>
 
       <div className="flex items-end justify-center py-4  w-9/12 ">
