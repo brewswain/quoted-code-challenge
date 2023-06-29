@@ -7,6 +7,8 @@ export interface Quote {
   likes: number;
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
+  // Not set to optional here since a placeholder is chosen if the potential user doesn't register with their own picture
+  profile_picture: string;
 }
 const quotesReference = collection(firestoreDb, "quotes");
 
@@ -19,7 +21,6 @@ export const getQuotesSubscription = (callback: (quotes: Quote[]) => void) => {
   const unsubscribe = onSnapshot(quotesReference, (snapshot) => {
     quotes = snapshot.docs.map((document) => document.data().quotes);
     const flatQuotes = quotes.flat();
-    console.log(flatQuotes);
     callback(flatQuotes);
   });
 
