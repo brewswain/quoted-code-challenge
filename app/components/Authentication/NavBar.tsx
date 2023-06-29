@@ -18,7 +18,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { firebaseSignOut } from "@/app/firebase/authentication";
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "@/app/firebase";
-import { getUserFromDB } from "@/app/firebase/firestore/getUser";
+import { getUserFromDB } from "@/app/firebase/firestore/users/getUser";
 import { DocumentData } from "firebase/firestore";
 
 import ProfilePictureIcon from "../ProfilePictureIcon/ProfilePictureIcon";
@@ -71,7 +71,6 @@ const NavBar = () => {
   return (
     <Box sx={{ width: "100vw", position: "fixed", bottom: 0, left: 0 }}>
       <BottomNavigation
-        showLabels
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
@@ -82,8 +81,13 @@ const NavBar = () => {
           height: "5rem",
         }}
       >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
         <BottomNavigationAction
+          label="Recents"
+          icon={<RestoreIcon />}
+          showLabel
+        />
+        <BottomNavigationAction
+          showLabel
           label="Favorites"
           icon={<FavoriteIcon />}
           sx={{ color: "white" }}
@@ -92,6 +96,7 @@ const NavBar = () => {
         {user ? (
           <Suspense fallback={<p className="text-black">loading</p>}>
             <BottomNavigationAction
+              showLabel
               icon={
                 <ProfilePictureIcon
                   name={user.user_name}
@@ -104,6 +109,7 @@ const NavBar = () => {
         ) : (
           <BottomNavigationAction
             label="Loading..."
+            showLabel
             icon={<AccountCircleIcon />}
             sx={{ color: "white" }}
           />
