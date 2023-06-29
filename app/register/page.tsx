@@ -34,6 +34,14 @@ const RegisterPage = () => {
       confirmPassword: "",
       profilePicture: "",
     });
+  const [validatedRegistrationPayload, setValidatedRegistrationPayload] =
+    useState<CustomerDetails>({
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      profilePicture: "",
+    });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   const router = useRouter();
@@ -100,11 +108,12 @@ const RegisterPage = () => {
           console.error(error);
         }
       }
-      const validatedAuthenticationPayload =
-        registrationPayloadSchema.parse(registrationPayload);
-      // TODO: check here to see why even if we successfully upload a profile picture, it uses one of our placeholders
-      const response = await emailSignUp(validatedAuthenticationPayload);
 
+      // Move the parsing and sign-up logic here
+
+      const response = await emailSignUp(validatedRegistrationPayload);
+
+      console.log("signupResponse", response);
       if (response) {
         toast.success("User successfully created, redirecting to feed.");
         setRegistrationPayload({
@@ -154,6 +163,19 @@ const RegisterPage = () => {
       componentIsMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    // Perform validation and logging when profilePicture changes
+    if (
+      registrationPayload.userName &&
+      registrationPayload.email &&
+      registrationPayload.password &&
+      registrationPayload.confirmPassword
+    ) {
+      const validation = registrationPayloadSchema.parse(registrationPayload);
+      setValidatedRegistrationPayload(validation);
+    }
+  }, [registrationPayload.profilePicture]);
 
   return (
     <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
