@@ -17,7 +17,7 @@ const FeedPage = () => {
     // Tne callback here is responsible for updating our state by calling setQuotes with our
     // updated quotes whenever there's a change in the quotes collection.
 
-    // The interesting thing here is that the callback operates iudependently from our useEffect.
+    // The interesting thing here is that the callback operates independently from our useEffect.
     // This therefore leads to the useEffect being responsible for setting up the initial subscription,
     // and cleaning up if needed, while the callback function within our onSnapshot() call within
     // getQuotesSubscription() is responsible for handling real-time updates. We then use that to
