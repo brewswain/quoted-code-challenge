@@ -102,7 +102,7 @@ const RegisterPage = () => {
       }
       const validatedAuthenticationPayload =
         registrationPayloadSchema.parse(registrationPayload);
-
+      // TODO: check here to see why even if we successfully upload a profile picture, it uses one of our placeholders
       const response = await emailSignUp(validatedAuthenticationPayload);
 
       if (response) {
