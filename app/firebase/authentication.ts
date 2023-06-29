@@ -11,11 +11,10 @@ import {
 
 import { firebaseAuth } from "./index";
 import { genericErrorToastNotify, signOutErrorToastNotify } from "../errors";
-import { addUserToDB } from "./firestore/addUser";
+import { addUserToDB } from "./firestore/users/addUser";
 
 const provider = new GoogleAuthProvider();
 
-// addUserToDB is used here to ensure that our user has the same UID both within firebase's authentication system, and our firestore db.
 export const emailSignIn = async (email: string, password: string) => {
   try {
     const response = await signInWithEmailAndPassword(
