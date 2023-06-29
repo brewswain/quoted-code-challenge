@@ -27,19 +27,15 @@ export const getAllQuotes = async () => {
 };
 
 // Real time collection data
-export const getQuotesSubscription = () => {
-  return new Promise<Quote[]>((resolve, reject) => {
-    let quotes: Quote[] = [];
+export const getQuotesSubscription = (callback: (quotes: Quote[]) => void) => {
+  let quotes: Quote[] = [];
 
-    const unsubscribe = onSnapshot(quotesReference, (snapshot) => {
-      snapshot.docs.forEach((document) => {
-        const docs = document.data();
-        quotes.push(docs.quotes);
-      });
-
-      const flatQuotes = quotes.flat();
-      console.log(flatQuotes);
-      resolve(flatQuotes);
-    });
+  const unsubscribe = onSnapshot(quotesReference, (snapshot) => {
+    quotes = snapshot.docs.map((document) => document.data().quotes);
+    const flatQuotes = quotes.flat();
+    console.log(flatQuotes);
+    callback(flatQuotes);
   });
+
+  return unsubscribe;
 };
