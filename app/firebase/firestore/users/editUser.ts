@@ -16,22 +16,43 @@ export const editUser = async (uid: string, userDetails: UserDetails) => {
   const quotesSnapshot = await getDoc(quotesDocument);
   const quotesData = quotesSnapshot.data();
 
-  const currentQuotesArray: Quote[] = quotesData?.quotes;
+  const currentQuotesArray: Quote[] | undefined = quotesData?.quotes;
 
-  const updatedQuotes = currentQuotesArray.map((quote) => ({
-    ...quote,
-    user_name: userName,
-  }));
+  if (currentQuotesArray) {
+    const updatedQuotesWithoutProfilePicture = currentQuotesArray.map(
+      (quote) => ({
+        ...quote,
+        user_name: userName,
+      })
+    );
 
-  try {
-    await updateDoc(quotesDocument, { quotes: updatedQuotes });
-    await updateDoc(userDocument, {
+    const updatedQuotesWithProfilePicture = currentQuotesArray.map((quote) => ({
+      ...quote,
       user_name: userName,
       profile_picture: profilePicture,
-    });
+    }));
 
-    return "success";
-  } catch (error) {
-    console.error(error);
+    try {
+      if (profilePicture) {
+        await updateDoc(userDocument, {
+          user_name: userName,
+          profile_picture: profilePicture,
+        });
+        await updateDoc(quotesDocument, {
+          quotes: updatedQuotesWithProfilePicture,
+        });
+      } else {
+        await updateDoc(userDocument, {
+          user_name: userName,
+        });
+        await updateDoc(quotesDocument, {
+          quotes: updatedQuotesWithoutProfilePicture,
+        });
+      }
+
+      return "success";
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
