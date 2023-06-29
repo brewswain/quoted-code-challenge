@@ -30,7 +30,7 @@ const QuoteCreationPage = () => {
 
   const handleSubmit = () => {
     const user = firebaseAuth.currentUser;
-    addQuote(user!.uid, quote);
+    user && addQuote(user.uid, quote);
 
     setQuote("");
     router.push("/feed");
