@@ -102,6 +102,7 @@ const RegisterPage = () => {
       }
       const validatedAuthenticationPayload =
         registrationPayloadSchema.parse(registrationPayload);
+
       const response = await emailSignUp(validatedAuthenticationPayload);
 
       if (response) {
