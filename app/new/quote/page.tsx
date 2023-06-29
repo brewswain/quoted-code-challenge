@@ -2,11 +2,19 @@
 // as there's probably some internal ContextAPI hook usage going on considering how dynamic it is.
 "use client";
 
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect, Suspense } from "react";
 
 import Link from "next/link";
 
-import { Button } from "@mui/material";
+import {
+  Button,
+  createTheme,
+  outlinedInputClasses,
+  Theme,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material";
+import { alpha, styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
@@ -15,16 +23,19 @@ import { firebaseAuth } from "@/app/firebase";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { addQuote } from "@/app/firebase/firestore/quotes/addQuote";
 import { useRouter } from "next/navigation";
+import { customTheme } from "./theme";
 
 const QuoteCreationPage = () => {
   const [quote, setQuote] = useState<string>("");
   const [user, setUser] = useState<User | null>();
 
   const router = useRouter();
+  const outerTheme = useTheme();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     // pre-emptive destructuring setup in case we end up with more complex quote handling than expected
     const { value } = event.target;
+    console.log({ event });
     setQuote(value);
   };
 
@@ -56,7 +67,6 @@ const QuoteCreationPage = () => {
           <ArrowBackIcon className="self-end m-4" />
         </Link>
         <Button
-          className="self-end"
           variant="contained"
           disabled={Boolean(!quote)}
           sx={{
@@ -90,17 +100,22 @@ const QuoteCreationPage = () => {
         noValidate
         autoComplete="off"
       >
-        <div className="mt-6 text-white">
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Care to Pen a new quote?"
-            multiline
-            fullWidth
-            minRows={4}
-            sx={{ height: "20rem" }}
-            variant="standard"
-            onChange={handleChange}
-          />
+        <div className="mt-6">
+          <Suspense fallback={<p>loading</p>}>
+            <ThemeProvider theme={customTheme(outerTheme)}>
+              {" "}
+              <TextField
+                id="custom-css-outlined-input"
+                label="Care to Pen a new quote?"
+                multiline
+                // fullWidth
+                minRows={4}
+                variant="standard"
+                onChange={handleChange}
+                value={quote}
+              />
+            </ThemeProvider>
+          </Suspense>
         </div>
       </Box>
     </main>
