@@ -1,15 +1,14 @@
 "use client";
 
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { emailSignIn, emailSignUp } from "@/app/firebase/authentication";
+import { emailSignIn } from "@/app/firebase/authentication";
 import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import { genericErrorToastNotify } from "@/app/errors";
-import { addUserToDB } from "@/app/firebase/firestore/addUser";
 
 interface EmailSignInProps {
   email: string;
