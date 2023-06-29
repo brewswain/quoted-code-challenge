@@ -8,25 +8,11 @@ export interface Quote {
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
 }
-const quotesQuery = query(collection(firestoreDb, "quotes"));
 const quotesReference = collection(firestoreDb, "quotes");
 
-export const getAllQuotes = async () => {
-  const querySnapshot = await getDocs(quotesQuery);
-
-  let quotes: Quote[] = [];
-
-  await Promise.all(
-    querySnapshot.docs.map(async (document) => {
-      const docs = document.data();
-
-      quotes.push(docs.quotes);
-    })
-  );
-  return quotes.flat();
-};
-
-// Real time collection data
+// Modifying this method to accept a callback function as a parameter is used to allow us to
+// communicate any updated quotes from the subscription to the compenent, which then triggers
+// a state update, causing a re-render.
 export const getQuotesSubscription = (callback: (quotes: Quote[]) => void) => {
   let quotes: Quote[] = [];
 
