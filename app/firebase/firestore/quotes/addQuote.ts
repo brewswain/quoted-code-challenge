@@ -25,6 +25,7 @@ export const addQuote = async (uid: string, quote: string) => {
     const userData = userSnapshot.data();
     const quotes = userData?.quotes || [];
     const user_name = userData?.user_name || "";
+    const profile_picture = userData?.profile_picture || "";
     const updatedQuotes = [
       ...quotes,
       {
@@ -34,6 +35,7 @@ export const addQuote = async (uid: string, quote: string) => {
         created_at: timestamp,
         likes: 0,
         user_name,
+        profile_picture,
       },
     ];
 
