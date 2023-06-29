@@ -14,6 +14,17 @@ const FeedPage = () => {
   const [quotes, setQuotes] = useState<Quote[]>([]);
 
   useEffect(() => {
+    // Tne callback here is responsible for updating our state by calling setQuotes with our
+    // updated quotes whenever there's a change in the quotes collection.
+
+    // The interesting thing here is that the callback operates iudependently from our useEffect.
+    // This therefore leads to the useEffect being responsible for setting up the initial subscription,
+    // and cleaning up if needed, while the callback function within our onSnapshot() call within
+    // getQuotesSubscription() is responsible for handling real-time updates. We then use that to
+    // update our state, causing UI re-renders.
+
+    // Pretty neat! this is the first time i've used this implementation pattern, so I went a bit
+    // deeper into this comment for my benefit in particular.
     const unsubscribe = getQuotesSubscription((updatedQuotes) => {
       setQuotes(updatedQuotes);
     });
