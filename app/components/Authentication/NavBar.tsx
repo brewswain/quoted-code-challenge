@@ -11,7 +11,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-import RestoreIcon from "@mui/icons-material/Restore";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
@@ -28,6 +28,7 @@ const NavBar = () => {
   // implementation taken from https://mui.com/material-ui/react-menu/
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<undefined | DocumentData>(undefined);
+  const [uid, setUid] = useState<string | null>(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const router = useRouter();
@@ -43,7 +44,7 @@ const NavBar = () => {
       async (currentUser) => {
         if (currentUser) {
           const user = await getUserFromDB(currentUser.uid);
-
+          setUid(currentUser.uid);
           setUser(user);
         } else if (!currentUser) {
           return;
@@ -69,7 +70,14 @@ const NavBar = () => {
   };
 
   return (
-    <Box sx={{ width: "100vw", position: "fixed", bottom: 0, left: 0 }}>
+    <Box
+      sx={{
+        width: "100vw",
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+      }}
+    >
       <BottomNavigation
         value={value}
         onChange={(event, newValue) => {
@@ -81,11 +89,14 @@ const NavBar = () => {
           height: "5rem",
         }}
       >
-        <BottomNavigationAction
-          label="Recents"
-          icon={<RestoreIcon />}
-          showLabel
-        />
+        <Link href="/">
+          <BottomNavigationAction
+            label="Home"
+            icon={<HomeOutlinedIcon />}
+            sx={{ color: "white" }}
+            showLabel
+          />
+        </Link>
         <BottomNavigationAction
           showLabel
           label="Favorites"
@@ -94,17 +105,20 @@ const NavBar = () => {
         />
 
         {user ? (
-          <Suspense fallback={<p className="text-black">loading</p>}>
-            <BottomNavigationAction
-              showLabel
-              icon={
-                <ProfilePictureIcon
-                  name={user.user_name}
-                  imageUrl={user.profile_picture}
-                />
-              }
-              onClick={handleClick}
-            />
+          <Suspense fallback={<p className="text-white">loading</p>}>
+            <div id="navbar__picture_container" className="h-[50px]">
+              <BottomNavigationAction
+                showLabel
+                icon={
+                  <ProfilePictureIcon
+                    name={user.user_name}
+                    imageUrl={user.profile_picture}
+                    dimensions={50}
+                  />
+                }
+                onClick={handleClick}
+              />
+            </div>
           </Suspense>
         ) : (
           <BottomNavigationAction
@@ -120,7 +134,16 @@ const NavBar = () => {
           open={isMenuOpen}
           onClose={handleClose}
         >
-          <Link href="/settings">
+          <Link
+            href={{
+              pathname: "/user/settings",
+              query: {
+                name: user?.user_name,
+                imageUrl: user?.profile_picture,
+                uid: uid,
+              },
+            }}
+          >
             <MenuItem onClick={handleClose}>Settings</MenuItem>
           </Link>
           <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
