@@ -113,7 +113,7 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
             dimensions={35}
           />
         </aside>
-        <div className="flex flex-col pl-8 max-w-[90%]">
+        <div className="flex flex-col pl-8 w-[90%]">
           <div className="flex mb-2">
             <p className="text-[0.9rem] text-zinc-400">{timeStamp}</p>
           </div>
