@@ -36,7 +36,7 @@ const QuoteCreationPage = () => {
   const [user, setUser] = useState<DocumentData | null>();
   const [uid, setUid] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
-  const [isOriginalQuote, setIsOriginalQuote] = useState<boolean>(true);
+  const [isOriginalQuote, setIsOriginalQuote] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(true);
 
   const router = useRouter();
