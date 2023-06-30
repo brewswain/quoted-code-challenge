@@ -9,6 +9,10 @@ import Link from "next/link";
 import { Button, ThemeProvider, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Input from "@mui/material/Input";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { firebaseAuth } from "@/app/firebase";
@@ -16,41 +20,97 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { addQuote } from "@/app/firebase/firestore/quotes/addQuote";
 import { useRouter } from "next/navigation";
 import { customTheme } from "./theme";
+import { getUserFromDB } from "@/app/firebase/firestore/users/getUser";
+import { DocumentData } from "firebase/firestore";
+
+export interface QuotePayload {
+  quote: string;
+  author: string;
+}
 
 const QuoteCreationPage = () => {
-  const [quote, setQuote] = useState<string>("");
-  const [user, setUser] = useState<User | null>();
+  const [quotePayload, setQuotePayload] = useState<QuotePayload>({
+    quote: "",
+    author: "",
+  });
+  const [user, setUser] = useState<DocumentData | null>();
+  const [uid, setUid] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
+  const [isOriginalQuote, setIsOriginalQuote] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(true);
 
   const router = useRouter();
   const outerTheme = useTheme();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // pre-emptive destructuring setup in case we end up with more complex quote handling than expected
-    const { value } = event.target;
-    console.log({ event });
-    setQuote(value);
+    const { value, name } = event.target;
+
+    setQuotePayload({
+      ...quotePayload,
+      [name]: value,
+    });
+  };
+
+  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsOriginalQuote(event.target.checked);
   };
 
   const handleSubmit = () => {
-    const user = firebaseAuth.currentUser;
-    user && addQuote(user.uid, quote);
+    user && addQuote(uid, quotePayload);
 
-    setQuote("");
+    setQuotePayload({ quote: "", author: "" });
     router.push("/feed");
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);
+        setUid(currentUser.uid);
+        const user = await getUserFromDB(currentUser.uid);
+        if (user) {
+          setUser(user);
+        }
       } else if (!currentUser) {
-        setUser(null);
+        console.error("User not found");
+        router.push("/login");
       }
     });
 
-    console.log({ user });
+    // Cleanup the event listener on component unmount
     return () => unsubscribe();
-  }, [user]);
+  }, []);
+
+  // // Whew this is kinda spaghetti, but the usecase is small enough that I'll leave it for now
+  // const isDisabled = () => {
+  //   if (isOriginalQuote) {
+  //     if (!quotePayload.author || !quotePayload.quote) {
+  //       return true;
+  //     }
+  //   } else if (!isOriginalQuote) {
+  //     if (!quotePayload.quote) {
+  //       return true;
+  //     }
+  //   } else {
+  //     return true;
+  //   }
+  // };
+
+  // console.log(isDisabled());
+
+  useEffect(() => {
+    console.log({ isOriginalQuote });
+
+    if (isOriginalQuote && user) {
+      setQuotePayload({
+        ...quotePayload,
+        author: user.user_name,
+      });
+    }
+  }, [isOriginalQuote]);
+
+  useEffect(() => {
+    console.log({ quotePayload });
+  }, [quotePayload]);
 
   return (
     <main className="flex flex-col justify-center">
@@ -60,7 +120,7 @@ const QuoteCreationPage = () => {
         </Link>
         <Button
           variant="contained"
-          disabled={Boolean(!quote)}
+          disabled={Boolean(!quotePayload.author || !quotePayload.quote)}
           sx={{
             borderRadius: "1rem",
             height: "2.2rem",
@@ -104,12 +164,33 @@ const QuoteCreationPage = () => {
                 minRows={4}
                 variant="standard"
                 onChange={handleChange}
-                value={quote}
+                name="quote"
+                value={quotePayload.quote}
               />
             </ThemeProvider>
           </Suspense>
         </div>
       </Box>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Checkbox checked={isOriginalQuote} onChange={handleChecked} />
+          }
+          label="Is this your quote?"
+        />
+      </FormGroup>{" "}
+      {!isOriginalQuote ? (
+        <ThemeProvider theme={customTheme(outerTheme)}>
+          {" "}
+          <TextField
+            label="Whose quote is it anyway?"
+            variant="standard"
+            onChange={handleChange}
+            name="author"
+            value={quotePayload.author}
+          />
+        </ThemeProvider>
+      ) : null}
     </main>
   );
 };
