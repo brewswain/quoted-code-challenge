@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { emailSignUp } from "@/app/firebase/authentication";
 
 import { z } from "zod";
+import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 
@@ -16,6 +17,8 @@ import {
   getRandomPlaceholderImage,
   uploadProfilePicture,
 } from "../firebase/storage";
+import Link from "next/link";
+import Image from "next/image";
 
 interface CustomerDetails {
   userName: string;
@@ -43,8 +46,18 @@ const RegisterPage = () => {
       profilePicture: "",
     });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [uploadingPicture, setUploadingPicture] = useState<boolean>(false);
+  const [showThumbnail, setShowThumbnail] = useState(false);
 
   const router = useRouter();
+
+  const handleMouseEnter = () => {
+    setShowThumbnail(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowThumbnail(false);
+  };
 
   const registrationPayloadSchema = z
     .object({
@@ -53,7 +66,6 @@ const RegisterPage = () => {
         .string()
         .min(1, { message: "This field cannot be empty" })
         .email("Please use a valid email"),
-
       password: z.string().min(8, {
         message:
           "Please ensure that your password is at least 8 characters long",
@@ -64,17 +76,9 @@ const RegisterPage = () => {
       }),
       profilePicture: z.any().optional(),
     })
-    .superRefine(({ confirmPassword, password }, ctx) => {
-      if (confirmPassword !== password) {
-        ctx.addIssue({
-          code: "custom",
-          message: "The passwords did not match",
-          path: ["confirmPassword"],
-        });
-        toast(
-          "The passwords didn't match, please re-enter them and try again."
-        );
-      }
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "The passwords did not match",
+      path: ["confirmPassword"],
     });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +100,8 @@ const RegisterPage = () => {
     try {
       if (profilePicture !== null) {
         try {
+          setUploadingPicture(true); // Disable the "Update Profile" button
+
           const response = await uploadProfilePicture(
             profilePicture,
             profilePicture.name + uuid()
@@ -106,7 +112,17 @@ const RegisterPage = () => {
           });
         } catch (error) {
           console.error(error);
+        } finally {
+          setUploadingPicture(false); // Re-enable the "Update Profile" button
         }
+      }
+
+      const validation =
+        registrationPayloadSchema.safeParse(registrationPayload);
+      if (validation.success) {
+        setValidatedRegistrationPayload(validation.data);
+      } else {
+        console.error(validation.error);
       }
 
       // Move the parsing and sign-up logic here
@@ -165,6 +181,39 @@ const RegisterPage = () => {
   }, []);
 
   useEffect(() => {
+    let componentIsMounted = true;
+
+    const handleUploadProfilePicture = async () => {
+      try {
+        setUploadingPicture(true); // Disable the "Update Profile" button
+        const response = await uploadProfilePicture(
+          profilePicture!,
+          profilePicture!.name + uuid()
+        );
+
+        if (componentIsMounted) {
+          setRegistrationPayload({
+            ...registrationPayload,
+            profilePicture: response,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setUploadingPicture(false); // Re-enable the "Update Profile" button
+      }
+    };
+
+    if (profilePicture !== null) {
+      handleUploadProfilePicture();
+    }
+
+    return () => {
+      componentIsMounted = false;
+    };
+  }, [profilePicture]);
+
+  useEffect(() => {
     // Perform validation and logging when profilePicture changes
     if (
       registrationPayload.userName &&
@@ -172,17 +221,27 @@ const RegisterPage = () => {
       registrationPayload.password &&
       registrationPayload.confirmPassword
     ) {
-      const validation = registrationPayloadSchema.parse(registrationPayload);
-      setValidatedRegistrationPayload(validation);
+      const validation =
+        registrationPayloadSchema.safeParse(registrationPayload);
+      if (validation.success) {
+        setValidatedRegistrationPayload(validation.data);
+      }
     }
-  }, [registrationPayload.profilePicture]);
+  }, [registrationPayload]);
 
   return (
     <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
+      <Link href="/login">
+        {/*  Entire tag is wrapped in link on purpose, just to make it easier to click */}
+        <p className="text-sm pb-8">
+          Accidentally clicked register? No prob,
+          <span className="text-red-400"> log in here.</span>
+        </p>
+      </Link>
       <div className="flex flex-col w-9/12">
         <div className="flex-col py-2">
           <label className="flex py-1">
-            Username:<span className="text-red-400">*</span>  
+            Username:<span className="text-red-400">*</span>
           </label>
           <input
             type="string"
@@ -194,7 +253,7 @@ const RegisterPage = () => {
         </div>
         <div className="flex-col py-2">
           <label className="flex py-1">
-            Email:<span className="text-red-400">*</span>  
+            Email:<span className="text-red-400">*</span>
           </label>
           <input
             type="email"
@@ -206,7 +265,7 @@ const RegisterPage = () => {
         </div>
         <div className="flex-col  py-2">
           <label className="flex py-1">
-            Password:<span className="text-red-400">*</span>  
+            Password:<span className="text-red-400">*</span>
           </label>
           <input
             type="password"
@@ -219,7 +278,7 @@ const RegisterPage = () => {
         </div>
         <div className="flex-col  py-2">
           <label className="flex py-1">
-            Confirm Password:<span className="text-red-400">*</span>  
+            Confirm Password:<span className="text-red-400">*</span>
           </label>
           <input
             type="password"
@@ -232,28 +291,60 @@ const RegisterPage = () => {
         </div>
         {/* Just placed here for conceptual layout, will be replaced with a file uploader when file storage is configured*/}
         <div className="flex-col  py-2">
-          <label className="flex py-1">Profile Picture: </label>
+          <label htmlFor="profilePicture" className="flex py-1">
+            <div className="bg-slate-500 w-full py-2 rounded text-center cursor-pointer">
+              Upload Profile Picture{" "}
+            </div>
+          </label>
           <input
             type="file"
+            id="profilePicture"
             name="profilePicture"
             onChange={handleChange}
             onKeyDown={handleKeypress}
-            className={"text-black self-end w-full py-1 rounded"}
+            className={"text-white self-end w-full py-1 rounded hidden"}
           />
         </div>
       </div>
 
       <div className="flex items-end justify-center py-4  w-9/12 ">
         <button
-          className="bg-green-500 w-full py-2 rounded"
+          className={`bg-green-500 w-full py-2 rounded ${
+            uploadingPicture ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           type="button"
           onClick={() => handleSignUp()}
+          disabled={uploadingPicture}
         >
           Sign Up
         </button>
       </div>
 
       <ToastContainer position="bottom-center" />
+
+      <footer className="text-sm pt-8">
+        <span className="text-pink-400">*</span> Please note, if you don&apos;t
+        choose to upload a Profile picture, you&apos;ll receive a placeholder
+        picture of{" "}
+        <span
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="text-pink-400 border-b-pink-400 border-dotted border-b-2"
+        >
+          Kirby
+        </span>
+        <div className="flex justify-end">
+          {showThumbnail && (
+            <Image
+              src="https://kirby.nintendo.com/assets/img/home/kirby-pink.png"
+              alt="Thumbnail of kirby, protagonist of popular video game series, Kirby."
+              width={100}
+              height={100}
+              className="flex justify-end"
+            />
+          )}
+        </div>
+      </footer>
     </div>
   );
 };
