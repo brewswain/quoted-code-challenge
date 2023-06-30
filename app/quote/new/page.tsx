@@ -75,7 +75,7 @@ const QuoteCreationPage = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (isOriginalQuote && user) {

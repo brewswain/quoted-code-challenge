@@ -65,7 +65,7 @@ const EditQuotePage = () => {
     if (!initialQuote || !initialAuthor || !quoteUid || !userUid) {
       router.push("/feed");
     }
-  }, []);
+  }, [initialAuthor, initialQuote, quoteUid, router, userUid]);
 
   return (
     <main className="flex flex-col justify-center">
