@@ -128,7 +128,6 @@ const RegisterPage = () => {
 
       const response = await emailSignUp(validatedRegistrationPayload);
 
-      console.log("signupResponse", response);
       if (response) {
         toast.success("User successfully created, redirecting to feed.");
         setRegistrationPayload({

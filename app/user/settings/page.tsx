@@ -63,7 +63,6 @@ const SettingsPage = () => {
         userName: validatedUpdateProfilePayload.userName,
         profilePicture: validatedUpdateProfilePayload.profilePicture!,
       });
-      console.log({ response });
       if (response) {
         router.push("/feed");
       }
@@ -98,7 +97,6 @@ const SettingsPage = () => {
 
           const validation =
             updateProfilePayloadSchema.parse(updateProfilePayload);
-          console.log("validating");
           setValidatedUpdateProfilePayload(validation);
         }
       } catch (error) {

@@ -53,7 +53,6 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
         setTimeStamp(formattedTimestamp);
     }
   };
-  console.log({ userUid, quoteUid, author_uid });
 
   const handleLikes = () => {
     if (isLiked) {

@@ -53,10 +53,6 @@ const FeedPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log({ uid });
-  }, [uid]);
-
   return (
     <div className="h-4 flex flex-col">
       <div className="pb-20">
