@@ -12,11 +12,9 @@ import TextField from "@mui/material/TextField";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Input from "@mui/material/Input";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { firebaseAuth } from "@/app/firebase";
-import { User, onAuthStateChanged } from "firebase/auth";
 import { addQuote } from "@/app/firebase/firestore/quotes/addQuote";
 import { useRouter } from "next/navigation";
 import { customTheme } from "./theme";
@@ -76,30 +74,10 @@ const QuoteCreationPage = () => {
       }
     });
 
-    // Cleanup the event listener on component unmount
     return () => unsubscribe();
   }, []);
 
-  // // Whew this is kinda spaghetti, but the usecase is small enough that I'll leave it for now
-  // const isDisabled = () => {
-  //   if (isOriginalQuote) {
-  //     if (!quotePayload.author || !quotePayload.quote) {
-  //       return true;
-  //     }
-  //   } else if (!isOriginalQuote) {
-  //     if (!quotePayload.quote) {
-  //       return true;
-  //     }
-  //   } else {
-  //     return true;
-  //   }
-  // };
-
-  // console.log(isDisabled());
-
   useEffect(() => {
-    console.log({ isOriginalQuote });
-
     if (isOriginalQuote && user) {
       setQuotePayload({
         ...quotePayload,
@@ -107,10 +85,6 @@ const QuoteCreationPage = () => {
       });
     }
   }, [isOriginalQuote]);
-
-  useEffect(() => {
-    console.log({ quotePayload });
-  }, [quotePayload]);
 
   return (
     <main className="flex flex-col justify-center">
