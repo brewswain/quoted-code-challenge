@@ -126,10 +126,11 @@ const QuoteCreationPage = () => {
         noValidate
         autoComplete="off"
       >
-        <div className="mt-6 px-8 flex justify-center ">
-          <Suspense fallback={<p>loading</p>}>
-            <ThemeProvider theme={customTheme(outerTheme)}>
+        <div className="mt-6 px-8 flex justify-center">
+          <ThemeProvider theme={customTheme(outerTheme)}>
+            <div style={{ minHeight: "200px" }}>
               {" "}
+              {/* Set a fixed height here */}
               <TextField
                 id="custom-css-outlined-input"
                 label="Care to Pen a new quote?"
@@ -141,13 +142,13 @@ const QuoteCreationPage = () => {
                 name="quote"
                 value={quotePayload.quote}
               />
-            </ThemeProvider>
-          </Suspense>
+            </div>
+          </ThemeProvider>
         </div>
       </Box>
-      <FormGroup>
+      <FormGroup className="ml-8">
         <FormControlLabel
-          className="ml-8 mt-6"
+          className="mt-6"
           control={
             <Checkbox checked={isOriginalQuote} onChange={handleChecked} />
           }
