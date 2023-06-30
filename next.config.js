@@ -12,6 +12,11 @@ const nextConfig = {
         hostname: "kirby.nintendo.com",
         protocol: "https",
         port: ""
+      },
+      {
+        hostname: "i.redd.it",
+        protocol: "https",
+        port: ""
       }
     ],
   },
