@@ -118,20 +118,11 @@ const SettingsPage = () => {
   }, [localPicture]);
 
   useEffect(() => {
-    console.log("validating");
     const validation =
       updateProfilePayloadSchema.safeParse(updateProfilePayload);
     if (validation.success) {
       setValidatedUpdateProfilePayload(validation.data);
     }
-  }, [updateProfilePayload]);
-
-  useEffect(() => {
-    console.log({ validatedUpdateProfilePayload });
-  }, [validatedUpdateProfilePayload]);
-
-  useEffect(() => {
-    console.log({ updateProfilePayload });
   }, [updateProfilePayload]);
 
   return (
