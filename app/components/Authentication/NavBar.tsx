@@ -143,6 +143,14 @@ const NavBar = () => {
             anchorEl={anchorEl}
             open={isMenuOpen}
             onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
           >
             <Link
               href={{
