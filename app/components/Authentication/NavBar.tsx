@@ -35,9 +35,7 @@ const NavBar = () => {
 
   // It should be noted that NextJS performs request Deduping. This is why there are some repeated calls throughout the app as opposed to using global state:
   // https://nextjs.org/docs/app/building-your-application/data-fetching#parallel-and-sequential-data-fetching
-  // That being said i'm unsure if this applies only to fetch requests themselves, or if making calls to firebase's
-  // observer/subscription flow also gets deduped.
-
+  // That being said it's primarily meant for using fetch() API so keep that in mind
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       firebaseAuth,
