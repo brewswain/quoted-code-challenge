@@ -70,10 +70,13 @@ const NavBar = () => {
   return (
     <Box
       sx={{
-        width: "100vw",
         position: "fixed",
+        width: "100vw",
         bottom: 0,
         left: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <BottomNavigation
@@ -85,67 +88,77 @@ const NavBar = () => {
           backgroundColor: "rgb(var(--background-start-rgb))",
           borderTop: "1px solid #6a6a6a",
           height: "5rem",
+          flexGrow: 1,
         }}
       >
-        <Link href="/">
-          <BottomNavigationAction
-            label="Home"
-            icon={<HomeOutlinedIcon />}
-            sx={{ color: "white" }}
-            showLabel
-          />
-        </Link>
-        <BottomNavigationAction
-          showLabel
-          label="Favorites"
-          icon={<FavoriteIcon />}
-          sx={{ color: "white" }}
-        />
-
-        {user ? (
-          <Suspense fallback={<p className="text-white">loading</p>}>
-            <div id="navbar__picture_container" className="h-[50px]">
-              <BottomNavigationAction
-                showLabel
-                icon={
-                  <ProfilePictureIcon
-                    name={user.user_name}
-                    imageUrl={user.profile_picture}
-                    dimensions={50}
-                  />
-                }
-                onClick={handleClick}
-              />
-            </div>
-          </Suspense>
-        ) : (
-          <BottomNavigationAction
-            label="Loading..."
-            showLabel
-            icon={<AccountCircleIcon />}
-            sx={{ color: "white" }}
-          />
-        )}
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={isMenuOpen}
-          onClose={handleClose}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+          }}
         >
-          <Link
-            href={{
-              pathname: "/user/settings",
-              query: {
-                name: user?.user_name,
-                imageUrl: user?.profile_picture,
-                uid: uid,
-              },
-            }}
-          >
-            <MenuItem onClick={handleClose}>Settings</MenuItem>
+          <Link href="/">
+            <BottomNavigationAction
+              label="Home"
+              icon={<HomeOutlinedIcon />}
+              sx={{ color: "white" }}
+              showLabel
+            />
           </Link>
-          <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
-        </Menu>
+          <BottomNavigationAction
+            showLabel
+            label="Favorites"
+            icon={<FavoriteIcon />}
+            sx={{ color: "white" }}
+          />
+
+          {user ? (
+            <Suspense fallback={<p className="text-white">loading</p>}>
+              <div id="navbar__picture_container" className="h-[50px]">
+                <BottomNavigationAction
+                  showLabel
+                  icon={
+                    <ProfilePictureIcon
+                      name={user.user_name}
+                      imageUrl={user.profile_picture}
+                      dimensions={50}
+                    />
+                  }
+                  onClick={handleClick}
+                />
+              </div>
+            </Suspense>
+          ) : (
+            <BottomNavigationAction
+              label="Loading..."
+              showLabel
+              icon={<AccountCircleIcon />}
+              sx={{ color: "white" }}
+            />
+          )}
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={isMenuOpen}
+            onClose={handleClose}
+          >
+            <Link
+              href={{
+                pathname: "/user/settings",
+                query: {
+                  name: user?.user_name,
+                  imageUrl: user?.profile_picture,
+                  uid: uid,
+                },
+              }}
+            >
+              <MenuItem onClick={handleClose}>Settings</MenuItem>
+            </Link>
+            <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+          </Menu>
+        </Box>
       </BottomNavigation>
     </Box>
   );
