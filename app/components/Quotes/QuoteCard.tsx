@@ -14,8 +14,8 @@ interface QuoteCardProps {
 }
 const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
   const [timeStamp, setTimeStamp] = useState<string>("");
-  const [user, setUser] = useState();
-  const { quote, user_name, likes, created_at, profile_picture } = quoteParam;
+  const { quote, user_name, likes, created_at, profile_picture, author } =
+    quoteParam;
 
   // cloning our Date to prevent accidental modification of source
   const calculateTimestamps = () => {
@@ -69,9 +69,7 @@ const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
           <article id="quote__text-container ">
             <h1 className="item-center text-3xl">{`${quote}`}</h1>
 
-            <p className="pr-4 text-zinc-400 text-xl">- {user_name} </p>
-            {/* {user_name === } */}
-            {/*  */}
+            <p className="pr-4 text-zinc-400 text-xl">- {author} </p>
           </article>
           <footer
             id="quote__footer"
