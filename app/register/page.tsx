@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { emailSignUp } from "@/app/firebase/authentication";
 
 import { z } from "zod";
-import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
 
