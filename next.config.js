@@ -8,6 +8,11 @@ const nextConfig = {
         port: "",
         
       },
+      {
+        hostname: "kirby.nintendo.com",
+        protocol: "https",
+        port: ""
+      }
     ],
   },
 };
