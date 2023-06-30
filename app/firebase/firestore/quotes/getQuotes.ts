@@ -4,12 +4,13 @@ import { firestoreDb } from "../..";
 export interface Quote {
   uid: string;
   quote: string;
-  likes: string[] | [];
+  likes: string[];
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
   // Not set to optional here since a placeholder is chosen if the potential user doesn't register with their own picture
   profile_picture: string;
   author: string;
+  author_uid: string;
 }
 const quotesReference = collection(firestoreDb, "quotes");
 

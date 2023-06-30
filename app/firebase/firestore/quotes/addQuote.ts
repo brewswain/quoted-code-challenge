@@ -39,6 +39,7 @@ export const addQuote = async (uid: string, quotePayload: QuotePayload) => {
         user_name,
         profile_picture,
         author: quotePayload.author,
+        author_uid: uid,
       },
     ];
 
