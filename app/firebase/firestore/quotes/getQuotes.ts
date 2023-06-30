@@ -4,7 +4,7 @@ import { firestoreDb } from "../..";
 export interface Quote {
   uid: string;
   quote: string;
-  likes: number;
+  likes: string[];
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
   // Not set to optional here since a placeholder is chosen if the potential user doesn't register with their own picture
