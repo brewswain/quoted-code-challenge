@@ -3,14 +3,22 @@
 import { useState, useEffect } from "react";
 
 import { Quote } from "@/app/firebase/firestore/quotes/getQuotes";
-
-import moment from "moment";
-
-import ProfilePictureIcon from "../ProfilePictureIcon/ProfilePictureIcon";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { addLike } from "@/app/firebase/firestore/likes/addLike";
 import { removeLike } from "@/app/firebase/firestore/likes/removeLike";
+
+import moment from "moment";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+
+import ProfilePictureIcon from "../ProfilePictureIcon/ProfilePictureIcon";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SettingsIcon from "@mui/icons-material/Settings";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { deleteQuote } from "@/app/firebase/firestore/quotes/deleteQuote";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface QuoteCardProps {
   quoteParam: Quote;
@@ -27,9 +35,25 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
     author,
     author_uid,
   } = quoteParam;
+  // implementation taken from https://mui.com/material-ui/react-menu/
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const router = useRouter();
   const quoteUid = quoteParam.uid;
   const isLiked = likes.includes(userUid);
+  const isAuthor = quoteParam.author_uid === userUid;
+  const isMenuOpen = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    if (anchorEl) {
+      // Removes focus from anchor element since it was causing our edit modal to instantly close
+      anchorEl.blur();
+    }
+    setAnchorEl(null);
+  };
 
   // cloning our Date to prevent accidental modification of source
   const calculateTimestamps = () => {
@@ -54,6 +78,10 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
     }
   };
 
+  const handleDelete = () => {
+    deleteQuote(userUid, quoteUid, author_uid);
+  };
+
   const handleLikes = () => {
     if (isLiked) {
       removeLike(userUid, quoteUid, author_uid);
@@ -73,6 +101,7 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
   return (
     <section className="flex flex-col border-b border-slate-600  p-4 mt-[calc(50% - 50vh)] mb-[calc(50% - 50vh)] min-h-[8rem]">
       {/* Semantic HTML is used a bit more in this component than otherwise since there was initially a bunch of nested divs for layout */}
+
       <div id="quote__layout-container" className="flex">
         <aside
           id="quote__picture-container"
@@ -95,7 +124,7 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
           </article>
           <footer
             id="quote__footer"
-            className="mt-4 flex justify-start w-full pr-4"
+            className="mt-4 flex justify-between w-full pr-4"
           >
             <div onClick={handleLikes}>
               {isLiked ? (
@@ -105,6 +134,40 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
               )}
               <span className="pl-2  text-zinc-400">{likes.length}</span>
             </div>
+            {isAuthor && (
+              <>
+                <div onClick={handleClick}>
+                  {" "}
+                  <SettingsIcon />
+                </div>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={isMenuOpen}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem>
+                    <Link
+                      href={{
+                        pathname: "/quote/edit",
+                        query: {
+                          initialQuote: quote,
+                          initialAuthor: author,
+                          userUid,
+                          quoteUid,
+                        },
+                      }}
+                    >
+                      <EditIcon />
+                       Edit Quote
+                    </Link>
+                  </MenuItem>
+
+                  <MenuItem onClick={() => handleDelete()}>
+                    <DeleteIcon />  Delete Quote
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </footer>
         </div>
       </div>
