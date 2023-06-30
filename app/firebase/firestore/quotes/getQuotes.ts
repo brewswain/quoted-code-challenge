@@ -1,4 +1,4 @@
-import { collection, query, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { firestoreDb } from "../..";
 
 export interface Quote {
@@ -14,16 +14,19 @@ export interface Quote {
 }
 const quotesReference = collection(firestoreDb, "quotes");
 
-// Modifying this method to accept a callback function as a parameter is used to allow us too the compenent, which then triggers
-// a state update, causing a re-render.
-// communicate any updated quotes from the subscription t
 export const getQuotesSubscription = (callback: (quotes: Quote[]) => void) => {
   let quotes: Quote[] = [];
 
   const unsubscribe = onSnapshot(quotesReference, (snapshot) => {
     quotes = snapshot.docs.map((document) => document.data().quotes);
     const flatQuotes = quotes.flat();
-    callback(flatQuotes);
+
+    // Sort the quotes based on the 'created_at' timestamp in descending order
+    const sortedQuotes = flatQuotes.sort(
+      (a, b) => b.created_at.seconds - a.created_at.seconds
+    );
+
+    callback(sortedQuotes);
   });
 
   return unsubscribe;
