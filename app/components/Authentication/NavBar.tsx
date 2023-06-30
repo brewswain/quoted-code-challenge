@@ -18,6 +18,7 @@ import { getUserFromDB } from "@/app/firebase/firestore/users/getUser";
 import { DocumentData } from "firebase/firestore";
 import ProfilePictureIcon from "../ProfilePictureIcon/ProfilePictureIcon";
 import { usePathname, useRouter } from "next/navigation";
+import CircularLoadingSkeleton from "../Skeletons/CircularLoadingSkeleton";
 
 const NavBar = () => {
   const [value, setValue] = useState<number>(0);
@@ -117,7 +118,7 @@ const NavBar = () => {
           />
 
           {user ? (
-            <Suspense fallback={<p className="text-white">loading</p>}>
+            <Suspense fallback={<CircularLoadingSkeleton />}>
               <BottomNavigationAction
                 showLabel
                 icon={
@@ -132,9 +133,8 @@ const NavBar = () => {
             </Suspense>
           ) : (
             <BottomNavigationAction
-              label="Loading..."
               showLabel
-              icon={<AccountCircleIcon />}
+              icon={<CircularLoadingSkeleton />}
               sx={{ color: "white" }}
             />
           )}
