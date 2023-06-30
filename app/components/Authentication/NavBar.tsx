@@ -27,7 +27,7 @@ const NavBar = () => {
   const [value, setValue] = useState<number>(0);
   // implementation taken from https://mui.com/material-ui/react-menu/
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [user, setUser] = useState<undefined | DocumentData>(undefined);
+  const [user, setUser] = useState<DocumentData | undefined>(undefined);
   const [uid, setUid] = useState<string | null>(null);
 
   const isMenuOpen = Boolean(anchorEl);
