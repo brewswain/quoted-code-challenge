@@ -152,7 +152,7 @@ const QuoteCreationPage = () => {
         noValidate
         autoComplete="off"
       >
-        <div className="mt-6">
+        <div className="mt-6 px-8 flex justify-center ">
           <Suspense fallback={<p>loading</p>}>
             <ThemeProvider theme={customTheme(outerTheme)}>
               {" "}
@@ -160,7 +160,7 @@ const QuoteCreationPage = () => {
                 id="custom-css-outlined-input"
                 label="Care to Pen a new quote?"
                 multiline
-                // fullWidth
+                fullWidth
                 minRows={4}
                 variant="standard"
                 onChange={handleChange}
@@ -173,24 +173,28 @@ const QuoteCreationPage = () => {
       </Box>
       <FormGroup>
         <FormControlLabel
+          className="ml-8 mt-6"
           control={
             <Checkbox checked={isOriginalQuote} onChange={handleChecked} />
           }
           label="Is this your quote?"
         />
       </FormGroup>{" "}
-      {!isOriginalQuote ? (
-        <ThemeProvider theme={customTheme(outerTheme)}>
-          {" "}
-          <TextField
-            label="Whose quote is it anyway?"
-            variant="standard"
-            onChange={handleChange}
-            name="author"
-            value={quotePayload.author}
-          />
-        </ThemeProvider>
-      ) : null}
+      <div className="mt-6 px-8 flex justify-center">
+        {!isOriginalQuote ? (
+          <ThemeProvider theme={customTheme(outerTheme)}>
+            {" "}
+            <TextField
+              label="Whose quote is it anyway?"
+              variant="standard"
+              fullWidth
+              onChange={handleChange}
+              name="author"
+              value={quotePayload.author}
+            />
+          </ThemeProvider>
+        ) : null}
+      </div>
     </main>
   );
 };
