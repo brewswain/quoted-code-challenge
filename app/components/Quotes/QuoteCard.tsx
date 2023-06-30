@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 
-import { Quote } from "@/app/firebase/firestore/quotes/getQuotes";
+import { LikedQuote, Quote } from "@/app/firebase/firestore/quotes/getQuotes";
 import { addLike } from "@/app/firebase/firestore/likes/addLike";
-import { removeLike } from "@/app/firebase/firestore/likes/removeLike";
+// QuoteCard.tsx
 
 import moment from "moment";
 import Menu from "@mui/material/Menu";
@@ -19,11 +19,13 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { deleteQuote } from "@/app/firebase/firestore/quotes/deleteQuote";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { removeLike } from "@/app/firebase/firestore/likes/removeLike";
 
 interface QuoteCardProps {
   quoteParam: Quote;
   userUid: string;
 }
+
 const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
   const [timeStamp, setTimeStamp] = useState<string>("");
   const {
@@ -40,7 +42,9 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
 
   const router = useRouter();
   const quoteUid = quoteParam.uid;
-  const isLiked = likes.includes(userUid);
+  const isLiked = likes.some(
+    (likedQuote: LikedQuote) => likedQuote.userUid === userUid
+  );
   const isAuthor = quoteParam.author_uid === userUid;
   const isMenuOpen = Boolean(anchorEl);
 
@@ -132,7 +136,7 @@ const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
               ) : (
                 <FavoriteBorderIcon className="cursor-pointer text-zinc-200 hover:text-[rgb(var(--icon-button-rgb))]" />
               )}
-              <span className="pl-2  text-zinc-400">{likes.length}</span>
+              <span className="pl-2  text-zinc-400">{likes?.length || 0}</span>
             </div>
             {isAuthor && (
               <>

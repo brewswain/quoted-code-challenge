@@ -1,10 +1,15 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import { firestoreDb } from "../..";
 
+export interface LikedQuote {
+  quoteUid: string;
+  authorUid: string;
+  userUid: string;
+}
 export interface Quote {
   uid: string;
   quote: string;
-  likes: string[];
+  likes: LikedQuote[];
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
   // Not set to optional here since a placeholder is chosen if the potential user doesn't register with their own picture
