@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./firebase";
+import RegisterPageSkeleton from "./components/Skeletons/RegisterPageSkeleton";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -33,7 +34,7 @@ const HomePage = () => {
 
   if (isLoggedIn === null) {
     // Handle the loading state while authentication status is being determined
-    return <div>Loading...</div>;
+    return <RegisterPageSkeleton />;
   }
 
   return;
