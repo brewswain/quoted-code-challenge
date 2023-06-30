@@ -7,15 +7,29 @@ import { Quote } from "@/app/firebase/firestore/quotes/getQuotes";
 import moment from "moment";
 
 import ProfilePictureIcon from "../ProfilePictureIcon/ProfilePictureIcon";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { addLike } from "@/app/firebase/firestore/likes/addLike";
+import { removeLike } from "@/app/firebase/firestore/likes/removeLike";
 
 interface QuoteCardProps {
   quoteParam: Quote;
+  userUid: string;
 }
-const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
+const QuoteCard = ({ quoteParam, userUid }: QuoteCardProps) => {
   const [timeStamp, setTimeStamp] = useState<string>("");
-  const { quote, user_name, likes, created_at, profile_picture, author } =
-    quoteParam;
+  const {
+    quote,
+    user_name,
+    likes,
+    created_at,
+    profile_picture,
+    author,
+    author_uid,
+  } = quoteParam;
+
+  const quoteUid = quoteParam.uid;
+  const isLiked = likes.includes(userUid);
 
   // cloning our Date to prevent accidental modification of source
   const calculateTimestamps = () => {
@@ -37,6 +51,15 @@ const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
         break;
       default:
         setTimeStamp(formattedTimestamp);
+    }
+  };
+  console.log({ userUid, quoteUid, author_uid });
+
+  const handleLikes = () => {
+    if (isLiked) {
+      removeLike(userUid, quoteUid, author_uid);
+    } else {
+      addLike(userUid, quoteUid, author_uid);
     }
   };
 
@@ -75,8 +98,14 @@ const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
             id="quote__footer"
             className="mt-4 flex justify-start w-full pr-4"
           >
-            <FavoriteBorderIcon className="cursor-pointer text-zinc-200 hover:text-[rgb(var(--icon-button-rgb))]" />
-            <span className="pl-2  text-zinc-400">{likes}</span>
+            <div onClick={handleLikes}>
+              {isLiked ? (
+                <FavoriteIcon className="cursor-pointer text-[rgb(var(--icon-button-rgb))]" />
+              ) : (
+                <FavoriteBorderIcon className="cursor-pointer text-zinc-200 hover:text-[rgb(var(--icon-button-rgb))]" />
+              )}
+              <span className="pl-2  text-zinc-400">{likes.length}</span>
+            </div>
           </footer>
         </div>
       </div>
