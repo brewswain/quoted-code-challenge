@@ -57,15 +57,15 @@ const LikesPage = () => {
             </div>
           ))
         ) : likedQuotes.length === 0 ? (
-          <div className="flex items-center h-[calc(100vh-5rem)] justify-center ">
-            <p className="w-9/12">
+          <div className="flex items-center h-[calc(100vh-5rem)] justify-center flex-col ">
+            <p className="w-9/12 pb-8">
               No liked quotes found :( Go back and like a couple quotes!
             </p>
             <Image
               src="https://i.redd.it/urtqrwgb0qya1.jpg"
               alt="A picture of kirby looking surprised"
-              height={150}
-              width={150}
+              height={250}
+              width={250}
             />
           </div>
         ) : (
