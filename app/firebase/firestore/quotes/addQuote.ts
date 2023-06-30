@@ -35,7 +35,7 @@ export const addQuote = async (uid: string, quotePayload: QuotePayload) => {
         uid: quoteUid,
         // Elected to use moment created timestamp here since firestore doesn't support serverTimestamp() within arrays.
         created_at: timestamp,
-        likes: [""],
+        likes: [],
         user_name,
         profile_picture,
         author: quotePayload.author,

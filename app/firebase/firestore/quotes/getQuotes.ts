@@ -4,7 +4,7 @@ import { firestoreDb } from "../..";
 export interface Quote {
   uid: string;
   quote: string;
-  likes: string[];
+  likes: string[] | [];
   created_at: { seconds: number; nanoseconds: number };
   user_name: string;
   // Not set to optional here since a placeholder is chosen if the potential user doesn't register with their own picture
@@ -13,9 +13,9 @@ export interface Quote {
 }
 const quotesReference = collection(firestoreDb, "quotes");
 
-// Modifying this method to accept a callback function as a parameter is used to allow us to
-// communicate any updated quotes from the subscription to the compenent, which then triggers
+// Modifying this method to accept a callback function as a parameter is used to allow us too the compenent, which then triggers
 // a state update, causing a re-render.
+// communicate any updated quotes from the subscription t
 export const getQuotesSubscription = (callback: (quotes: Quote[]) => void) => {
   let quotes: Quote[] = [];
 
