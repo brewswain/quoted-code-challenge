@@ -104,18 +104,27 @@ const NavBar = () => {
             showLabel
             onClick={() => router.push("/")}
           />
-          <BottomNavigationAction
-            showLabel
-            label="Favorites"
-            icon={<FavoriteIcon />}
-            sx={{
-              color:
-                pathname === "/favorites"
-                  ? "rgb(var(--icon-button-rgb))"
-                  : "white",
+          <Link
+            href={{
+              pathname: "/user/likes",
+              query: {
+                userUid: uid,
+              },
             }}
-            onClick={() => router.push("/favorites")}
-          />
+          >
+            <BottomNavigationAction
+              showLabel
+              label="Likes"
+              icon={<FavoriteIcon />}
+              sx={{
+                color:
+                  pathname === "/user/likes"
+                    ? "rgb(var(--icon-button-rgb))"
+                    : "white",
+              }}
+              onClick={() => router.push("/favorites")}
+            />
+          </Link>
 
           {user ? (
             <Suspense fallback={<CircularLoadingSkeleton />}>
