@@ -1,34 +1,21 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+Firstly, the app is available for preview both on [Vercel](https://quoted-code-challenge-d4dx-hbylt7g9e-brewswain.vercel.app/) and [Netlify](https://frolicking-mousse-0cdc97.netlify.app/).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+However, if you wish to use this app locally, let's get you started correctly!
+
+First, open up your terminal of choice, and use the following commands:
+
 ```
+git clone https://github.com/brewswain/quoted-code-challenge.git
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+cd quoted-code-challenge
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+npm run dev
+```
+Once you've executed all the above, open your browser, and go to `localhost:3000`
 
-## Learn More
+That's it!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
