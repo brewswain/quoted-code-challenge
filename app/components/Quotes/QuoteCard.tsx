@@ -49,7 +49,7 @@ const QuoteCard = ({ quoteParam }: QuoteCardProps) => {
   }, [timeStamp]);
 
   return (
-    <section className="flex flex-col border-b border-[#6a6a6a] p-4 mt-[calc(50% - 50vh)] mb-[calc(50% - 50vh)] min-h-[8rem]">
+    <section className="flex flex-col border-b border-slate-600  p-4 mt-[calc(50% - 50vh)] mb-[calc(50% - 50vh)] min-h-[8rem]">
       {/* Semantic HTML is used a bit more in this component than otherwise since there was initially a bunch of nested divs for layout */}
       <div id="quote__layout-container" className="flex">
         <aside
