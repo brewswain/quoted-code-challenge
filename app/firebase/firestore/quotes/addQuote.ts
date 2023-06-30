@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { firestoreDb } from "../..";
 import { Quote } from "./getQuotes";
-import { QuotePayload } from "@/app/new/quote/page";
+import { QuotePayload } from "@/app/quote/new/page";
 
 // The goal here is that we add quote data to TWO separate collections; One would be a `quotes` collection that has every quote's UID listed
 // so that we can populate our entire feed by simply referencing the quotes collection and searching for each quote by said ID. We can also
