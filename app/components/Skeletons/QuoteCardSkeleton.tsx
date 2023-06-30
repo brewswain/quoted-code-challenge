@@ -1,5 +1,3 @@
-// components/QuoteCardSkeleton.tsx
-
 import { Skeleton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 

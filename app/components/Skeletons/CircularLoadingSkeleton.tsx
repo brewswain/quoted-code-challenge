@@ -1,5 +1,3 @@
-// components/CircularLoadingSkeleton.tsx
-
 import { Skeleton } from "@mui/material";
 
 const CircularLoadingSkeleton = () => {
