@@ -25,10 +25,18 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    if (isLoggedIn === false) {
-      router.push("/login");
-    } else if (isLoggedIn === true) {
-      router.push(`/feed`);
+    const delayRedirect = async () => {
+      if (isLoggedIn === false) {
+        await new Promise((resolve) => setTimeout(resolve, 1500)); // Wait for 1.5 seconds
+        router.push("/login");
+      } else if (isLoggedIn === true) {
+        await new Promise((resolve) => setTimeout(resolve, 1500)); // Wait for 1.5 seconds
+        router.push("/feed");
+      }
+    };
+
+    if (isLoggedIn !== null) {
+      delayRedirect();
     }
   }, [isLoggedIn, router]);
 
@@ -37,7 +45,9 @@ const HomePage = () => {
     return <RegisterPageSkeleton />;
   }
 
-  return;
+  // We need to return something even if isLoggedIn is true or false.
+  // You can display a message or a loader here if needed.
+  return <RegisterPageSkeleton />;
 };
 
 export default HomePage;
