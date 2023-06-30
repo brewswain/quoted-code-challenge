@@ -50,23 +50,23 @@ const FeedPage = () => {
         }
       }
     );
-
     return () => {
       unsubscribeFromQuotes();
       unsubscribeFromUser();
     };
-  }, []);
+  }, [router]);
 
   return (
     <div className="h-4 flex flex-col">
       <div className="pb-20">
         {loading
-          ? // _ used here since we don't actually plan to use anyting but our index from this map
+          ? // _ used here since we don't actually plan to use anything but our index from this map
             // Also we synthetically assume skeleton amount to signify multiple quotes.
 
             Array.from({ length: 3 }).map((_, index) => (
-              <div className="pl-8">
-                <QuoteCardSkeleton key={index} />
+              // This is usually a code-smell, but using index as key here is fine as this is a static amount of elements, and we're never going to interact with it
+              <div className="pl-8" key={index}>
+                <QuoteCardSkeleton />
               </div>
             ))
           : quotes.map((quote) => (
