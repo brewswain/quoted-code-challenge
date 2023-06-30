@@ -287,7 +287,6 @@ const RegisterPage = () => {
             className={"text-black self-end w-full py-1 rounded"}
           />
         </div>
-        {/* Just placed here for conceptual layout, will be replaced with a file uploader when file storage is configured*/}
         <div className="flex-col  py-2">
           <label htmlFor="profilePicture" className="flex py-1">
             <div className="bg-slate-500 w-full py-2 rounded text-center cursor-pointer">

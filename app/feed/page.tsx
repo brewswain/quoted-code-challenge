@@ -8,8 +8,7 @@ import {
 } from "../firebase/firestore/quotes/getQuotes";
 import QuoteCard from "../components/Quotes/QuoteCard";
 import { firebaseAuth } from "../firebase";
-import { getUserFromDB } from "../firebase/firestore/users/getUser";
-import { DocumentData } from "firebase/firestore";
+
 import { useRouter } from "next/navigation";
 
 export const revalidate = 60;
@@ -56,10 +55,6 @@ const FeedPage = () => {
   return (
     <div className="h-4 flex flex-col">
       <div className="pb-20">
-        {/*  for like functionality we can make sure that whenever a user likes and unlikes a post, they 
-        update their profile in the database with an array of quote uids. we then pass this array as a prop 
-        into quotecard, where we check to see if the current post's UID matches up. if the post is liked? 
-        we adjust styling of our heart to represent that. */}
         {quotes.map((quote) => (
           <QuoteCard quoteParam={quote} key={quote.uid} userUid={uid} />
         ))}
