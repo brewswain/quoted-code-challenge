@@ -61,7 +61,9 @@ const QuoteCreationPage = () => {
   };
 
   const handleSubmit = () => {
+    console.log("attempting to add quote", { quotePayload });
     user && addQuote(uid, quotePayload);
+    console.log(addQuote(uid, quotePayload));
 
     setQuotePayload({ quote: "", author: "" });
     router.push("/feed");

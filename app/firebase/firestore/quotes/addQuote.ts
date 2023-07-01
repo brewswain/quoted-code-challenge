@@ -43,6 +43,9 @@ export const addQuote = async (uid: string, quotePayload: QuotePayload) => {
       },
     ];
 
+    // Netlify logging, temporary:
+    console.log("Add quote request received", { uid, quotePayload });
+
     await updateDoc(userDocument, { quotes: updatedQuotes });
     // // Potentially, we can reverse our current implementation of quotes collection--instead of  having the collection be `quotes/quoteId/user_id`, it can be something like:
     // // `quotes/user_id/quotes[quoteId1, quoteId2, ...]
