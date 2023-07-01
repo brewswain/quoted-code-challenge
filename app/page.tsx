@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { firebaseAuth } from "./firebase";
-import RegisterPageSkeleton from "./components/Skeletons/RegisterPageSkeleton";
-import LoginPageSkeleton from "./components/Skeletons/RegisterPageSkeleton";
+import LoginPageSkeleton from "./components/Skeletons/LoginPageSkeleton";
 
 const HomePage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);

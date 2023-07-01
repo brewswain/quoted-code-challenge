@@ -1,4 +1,6 @@
-const RegisterPageSkeleton = () => {
+// I found that for this case it was easier to make my skeleton from scratch for the layout i wanted.
+
+const LoginPageSkeleton = () => {
   return (
     <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-24">
       <div className="animate-pulse w-9/12">
@@ -13,4 +15,4 @@ const RegisterPageSkeleton = () => {
   );
 };
 
-export default RegisterPageSkeleton;
+export default LoginPageSkeleton;
