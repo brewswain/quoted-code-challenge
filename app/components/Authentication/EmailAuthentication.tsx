@@ -85,7 +85,7 @@ const EmailAuthentication = () => {
             name="email"
             onChange={handleChange}
             value={authenticationPayload.email}
-            className="text-black w-full py-1 rounded"
+            className="text-black w-full py-1 rounded pl-2"
           />
         </div>
         <div className="flex-col  py-2">
@@ -96,7 +96,7 @@ const EmailAuthentication = () => {
             onChange={handleChange}
             value={authenticationPayload.password}
             onKeyDown={handleKeypress}
-            className={"text-black self-end w-full py-1 rounded"}
+            className={"text-black self-end w-full py-1 rounded pl-2"}
           />
         </div>
       </div>

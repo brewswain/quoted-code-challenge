@@ -246,7 +246,7 @@ const RegisterPage = () => {
             name="userName"
             onChange={handleChange}
             value={registrationPayload.userName}
-            className="text-black w-full py-1 rounded"
+            className="text-black w-full py-1 rounded pl-2"
           />
         </div>
         <div className="flex-col py-2">
@@ -258,7 +258,7 @@ const RegisterPage = () => {
             name="email"
             onChange={handleChange}
             value={registrationPayload.email}
-            className="text-black w-full py-1 rounded"
+            className="text-black w-full py-1 rounded pl-2"
           />
         </div>
         <div className="flex-col  py-2">
@@ -271,7 +271,7 @@ const RegisterPage = () => {
             onChange={handleChange}
             value={registrationPayload.password}
             onKeyDown={handleKeypress}
-            className={"text-black self-end w-full py-1 rounded"}
+            className={"text-black self-end w-full py-1 rounded pl-2"}
           />
         </div>
         <div className="flex-col  py-2">
@@ -284,7 +284,7 @@ const RegisterPage = () => {
             onChange={handleChange}
             value={registrationPayload.confirmPassword}
             onKeyDown={handleKeypress}
-            className={"text-black self-end w-full py-1 rounded"}
+            className={"text-black self-end w-full py-1 rounded pl-2"}
           />
         </div>
         <div className="flex-col  py-2">
