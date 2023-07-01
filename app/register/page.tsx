@@ -47,6 +47,9 @@ const RegisterPage = () => {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [uploadingPicture, setUploadingPicture] = useState<boolean>(false);
   const [showThumbnail, setShowThumbnail] = useState(false);
+  const [preFetchTriggered, setPrefetchTriggered] = useState<boolean | null>(
+    null
+  );
 
   const router = useRouter();
 
@@ -137,7 +140,7 @@ const RegisterPage = () => {
           confirmPassword: "",
           profilePicture: "",
         });
-        router.push("/");
+        router.push("/feed");
       }
     } catch (error) {
       genericErrorToastNotify();
@@ -149,6 +152,10 @@ const RegisterPage = () => {
     if (event.key === "Enter") {
       handleSignUp();
     }
+  };
+
+  const prefetchFeed = async () => {
+    await router.prefetch("/feed");
   };
 
   useEffect(() => {
@@ -212,6 +219,16 @@ const RegisterPage = () => {
   }, [profilePicture]);
 
   useEffect(() => {
+    // Since the registration process is heavier than the login one, it makes more sense to get the prefetch done earlier
+    //  to get it out of the way, so we're only checking for the email field being filled
+    const emailIsFilled = registrationPayload.email.trim() !== "";
+
+    if (preFetchTriggered === null && emailIsFilled) {
+      setPrefetchTriggered(false);
+      prefetchFeed();
+      setPrefetchTriggered(true);
+    }
+
     // Perform validation and logging when profilePicture changes
     if (
       registrationPayload.userName &&

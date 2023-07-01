@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { emailSignIn } from "@/app/firebase/authentication";
@@ -23,6 +23,9 @@ const EmailAuthentication = () => {
       email: "",
       password: "",
     });
+  const [preFetchTriggered, setPrefetchTriggered] = useState<boolean | null>(
+    null
+  );
 
   // When it comes to authentication, I just wanted some light input validation for security purposes.
   // The password field
@@ -60,7 +63,7 @@ const EmailAuthentication = () => {
       if (response) {
         toast.success("User successfully logged in, redirecting to feed.");
         setAuthenticationPayload({ email: "", password: "" });
-        router.push("/");
+        router.push("/feed");
       }
     } catch (error) {
       genericErrorToastNotify();
@@ -74,6 +77,23 @@ const EmailAuthentication = () => {
       handleSignIn();
     }
   };
+
+  // Little optimization here; we'll trigger it when user begins to fill in our login info.
+  // We only want it to trigger once, so we'll use a conditional approach within a useEffect
+  const prefetchFeed = async () => {
+    await router.prefetch("/feed");
+  };
+
+  useEffect(() => {
+    const loginInfoIsFilled =
+      authenticationPayload.email.trim() !== "" ||
+      authenticationPayload.password.trim() !== "";
+
+    if (preFetchTriggered === null && loginInfoIsFilled) {
+      prefetchFeed();
+      setPrefetchTriggered(true);
+    }
+  }, [authenticationPayload, preFetchTriggered]);
 
   return (
     <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
