@@ -1,5 +1,4 @@
-"use client";
-
+// use client";
 import { useState, useEffect } from "react";
 import NewQuoteButton from "../components/Quotes/NewQuoteButton";
 import {
@@ -22,6 +21,8 @@ const FeedPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    setLoading(true);
+
     // Tne callback here is responsible for updating our state by calling setQuotes with our
     // updated quotes whenever there's a change in the quotes collection.
 
@@ -33,8 +34,6 @@ const FeedPage = () => {
 
     // Pretty neat! this is the first time i've used this implementation pattern, so I went a bit
     // deeper into this comment for my benefit in particular.
-    setLoading(true);
-
     const unsubscribeFromQuotes = getQuotesSubscription((updatedQuotes) => {
       setQuotes(updatedQuotes);
       setLoading(false);
@@ -50,9 +49,18 @@ const FeedPage = () => {
         }
       }
     );
+
+    // Use the window.onload event to prefetch after the page has finished loading--since this is potentially the heaviest page on the app,
+    //  we only want to pre-fetch as a luxury
+    const prefetchOnLoad = () => {
+      router.prefetch("/quote/new");
+    };
+    window.onload = prefetchOnLoad;
+
     return () => {
       unsubscribeFromQuotes();
       unsubscribeFromUser();
+      window.onload = null; // Clean up the event listener to avoid prefetch after unmount
     };
   }, [router]);
 
@@ -60,11 +68,7 @@ const FeedPage = () => {
     <div className="h-4 flex flex-col">
       <div className="pb-20">
         {loading
-          ? // _ used here since we don't actually plan to use anything but our index from this map
-            // Also we synthetically assume skeleton amount to signify multiple quotes.
-
-            Array.from({ length: 3 }).map((_, index) => (
-              // This is usually a code-smell, but using index as key here is fine as this is a static amount of elements, and we're never going to interact with it
+          ? Array.from({ length: 3 }).map((_, index) => (
               <div className="pl-8" key={index}>
                 <QuoteCardSkeleton />
               </div>
