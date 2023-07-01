@@ -2,11 +2,12 @@
 // as there's probably some internal ContextAPI hook usage going on considering how dynamic it is.
 "use client";
 
-import { ChangeEvent, useState, useEffect, Suspense } from "react";
+import { ChangeEvent, useState, useEffect, Suspense, lazy } from "react";
 
 import Link from "next/link";
 
 import { Button, ThemeProvider, useTheme } from "@mui/material";
+
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import FormGroup from "@mui/material/FormGroup";
@@ -20,6 +21,14 @@ import { useRouter } from "next/navigation";
 import { customTheme } from "./theme";
 import { getUserFromDB } from "@/app/firebase/firestore/users/getUser";
 import { DocumentData } from "firebase/firestore";
+import TextFieldSkeleton from "@/app/components/Skeletons/TextFieldSkeleton";
+
+// Import statements
+
+// Define a lazy-loaded version of ThemeProvider using React.lazy()
+const LazyThemeProvider = lazy(
+  () => import("@mui/material/styles/ThemeProvider")
+);
 
 export interface QuotePayload {
   quote: string;
@@ -33,9 +42,7 @@ const QuoteCreationPage = () => {
   });
   const [user, setUser] = useState<DocumentData | null>();
   const [uid, setUid] = useState<string>("");
-  const [author, setAuthor] = useState<string>("");
   const [isOriginalQuote, setIsOriginalQuote] = useState<boolean>(false);
-  const [checked, setChecked] = useState<boolean>(true);
 
   const router = useRouter();
   const outerTheme = useTheme();
@@ -109,7 +116,6 @@ const QuoteCreationPage = () => {
               opacity: 0.5,
             },
           }}
-          // Check <CreateQuoteButton /> for why I'm using both `sx` and `style`.
           style={{
             backgroundColor: "rgb(var(--icon-button-rgb))",
           }}
@@ -127,23 +133,23 @@ const QuoteCreationPage = () => {
         autoComplete="off"
       >
         <div className="mt-6 px-8 flex justify-center">
-          <ThemeProvider theme={customTheme(outerTheme)}>
-            <div style={{ minHeight: "200px" }}>
-              {" "}
-              {/* Set a fixed height here */}
-              <TextField
-                id="custom-css-outlined-input"
-                label="Care to Pen a new quote?"
-                multiline
-                fullWidth
-                minRows={4}
-                variant="standard"
-                onChange={handleChange}
-                name="quote"
-                value={quotePayload.quote}
-              />
-            </div>
-          </ThemeProvider>
+          <Suspense fallback={<TextFieldSkeleton />}>
+            <LazyThemeProvider theme={customTheme(outerTheme)}>
+              <div style={{ minHeight: "200px" }}>
+                <TextField
+                  id="custom-css-outlined-input"
+                  label="Care to Pen a new quote?"
+                  multiline
+                  fullWidth
+                  minRows={4}
+                  variant="standard"
+                  onChange={handleChange}
+                  name="quote"
+                  value={quotePayload.quote}
+                />
+              </div>
+            </LazyThemeProvider>
+          </Suspense>
         </div>
       </Box>
       <FormGroup className="ml-8">
@@ -154,20 +160,21 @@ const QuoteCreationPage = () => {
           }
           label="Is this your quote?"
         />
-      </FormGroup>{" "}
+      </FormGroup>
       <div className="mt-6 px-8 flex justify-center">
         {!isOriginalQuote ? (
-          <ThemeProvider theme={customTheme(outerTheme)}>
-            {" "}
-            <TextField
-              label="Whose quote is it anyway?"
-              variant="standard"
-              fullWidth
-              onChange={handleChange}
-              name="author"
-              value={quotePayload.author}
-            />
-          </ThemeProvider>
+          <Suspense fallback={<TextFieldSkeleton />}>
+            <LazyThemeProvider theme={customTheme(outerTheme)}>
+              <TextField
+                label="Whose quote is it anyway?"
+                variant="standard"
+                fullWidth
+                onChange={handleChange}
+                name="author"
+                value={quotePayload.author}
+              />
+            </LazyThemeProvider>
+          </Suspense>
         ) : null}
       </div>
     </main>
