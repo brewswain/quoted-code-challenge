@@ -4,9 +4,11 @@ Firstly, the app is available for preview both on [Vercel](https://quoted-code-c
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/140d1a64-9a45-4240-b20f-7c0a0d4a1dbc/deploy-status)](https://app.netlify.com/sites/frolicking-mousse-0cdc97/deploys)
 
- ## (For now, Netlify site is deployed but one important function [the one to add a new quote] isn't working on it 🤔. Use Vercel for now)
-
 ![Vercel Status](https://vercelbadge.vercel.app/api/brewswain/quoted-code-challenge)
+
+
+ ### Netlify site is live, but it's way less performant, every single navigation makes the page refresh and has some layout shift problems, combined with some weird API handling bugs. I did some research and it appears to be on Netlify's side since they're still working out NextJS 13's app router. Therefore, I recommend using Vercel's site, but I'll leave the netlify one live as well as a Proof-of-concept.
+
 
 
 
