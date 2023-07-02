@@ -245,7 +245,7 @@ const RegisterPage = () => {
   }, [registrationPayload]);
 
   return (
-    <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
+    <div className="flex flex-col items-center  m-0 m-auto mt-20 w-[90vw] md:w-[25rem]">
       <Link href="/login">
         {/*  Entire tag is wrapped in link on purpose, just to make it easier to click */}
         <p className="text-sm pb-8">

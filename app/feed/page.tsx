@@ -66,19 +66,21 @@ const FeedPage = () => {
   }, [router]);
 
   return (
-    <div className="h-4 flex flex-col">
-      <div className="pb-20">
-        {loading
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <div className="pl-8" key={index}>
-                <QuoteCardSkeleton />
-              </div>
-            ))
-          : quotes.map((quote) => (
-              <QuoteCard quoteParam={quote} key={quote.uid} userUid={uid} />
-            ))}
+    <div className="h-4 flex flex-col md:items-center ">
+      <div className="md:w-[30vw] ">
+        <div className="pb-20">
+          {loading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <div className="pl-8" key={index}>
+                  <QuoteCardSkeleton />
+                </div>
+              ))
+            : quotes.map((quote) => (
+                <QuoteCard quoteParam={quote} key={quote.uid} userUid={uid} />
+              ))}
+        </div>
+        <NewQuoteButton />
       </div>
-      <NewQuoteButton />
     </div>
   );
 };

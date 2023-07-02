@@ -158,7 +158,7 @@ const SettingsPage = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col items-center pt-8">
+      <div className="flex flex-col items-center pt-8 m-0 m-auto mt-20 w-[90vw] md:w-[25rem]">
         <div className="flex flex-col w-9/12 justify-center">
           <div className="flex-col py-2">
             <label className="flex py-1">Username: </label>

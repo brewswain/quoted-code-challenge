@@ -117,8 +117,8 @@ const QuoteCreationPage = () => {
   }, []);
 
   return (
-    <main className="flex flex-col justify-center">
-      <div className="flex justify-between">
+    <main className="flex flex-col justify-center items-center mt-20">
+      <div className="flex justify-between  w-[90vw] md:w-[40rem]">
         <Link href={"/feed"}>
           <ArrowBackIcon className="self-end m-4" />
         </Link>
@@ -150,8 +150,9 @@ const QuoteCreationPage = () => {
       <Box
         component="form"
         sx={{
-          "& .MuiTextField-root": { m: 1, width: "90vw" },
+          "& .MuiTextField-root": { m: 1 },
         }}
+        className="w-[90vw] md:w-[40rem] "
         noValidate
         autoComplete="off"
       >
@@ -160,7 +161,7 @@ const QuoteCreationPage = () => {
             <TextFieldSkeleton />
           ) : (
             <ThemeProvider theme={customTheme(outerTheme)}>
-              <div style={{ minHeight: "200px" }}>
+              <div style={{ minHeight: "200px" }} className=" md:w-full">
                 <TextField
                   id="custom-css-outlined-input"
                   label="Care to Pen a new quote?"
@@ -191,13 +192,11 @@ const QuoteCreationPage = () => {
             <TextFieldSkeleton />
           ) : (
             <ThemeProvider theme={customTheme(outerTheme)}>
-              <div style={{ minHeight: "200px" }}>
+              <div className="md:w-full">
                 <TextField
                   id="custom-css-outlined-input"
                   label="Whose quote is it anyway?"
-                  multiline
                   fullWidth
-                  minRows={4}
                   variant="standard"
                   onChange={handleChange}
                   name="author"

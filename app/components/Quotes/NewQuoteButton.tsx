@@ -8,7 +8,7 @@ import AddCommentIcon from "@mui/icons-material/AddComment";
 
 const NewQuoteButton = () => {
   return (
-    <Link href="/quote/new">
+    <Link href="/quote/new" className="md:hidden">
       <IconButton
         size="large"
         sx={{

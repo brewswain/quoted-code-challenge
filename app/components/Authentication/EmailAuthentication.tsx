@@ -96,8 +96,12 @@ const EmailAuthentication = () => {
   }, [authenticationPayload, preFetchTriggered]);
 
   return (
-    <div className="flex flex-col items-center w-[90vw] m-0 m-auto mt-20">
-      <div className="flex flex-col w-9/12">
+    <div className="flex flex-col items-center m-0 m-auto mt-20 w-[90vw] md:w-[25rem]">
+      <h1 className="text-2xl">
+        Sign in to{" "}
+        <span className="text-[rgb(var(--icon-button-rgb))]">Quoted</span>
+      </h1>
+      <div className="flex flex-col w-9/12 mt-8">
         <div className="flex-col py-2">
           <label className="flex py-1">Email: </label>
           <input
