@@ -102,7 +102,7 @@ const NavBar = () => {
                 pathname === "/feed" ? "rgb(var(--icon-button-rgb))" : "white",
             }}
             showLabel
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/feed")}
           />
           <Link
             href={{
