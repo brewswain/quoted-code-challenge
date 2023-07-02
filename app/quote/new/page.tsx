@@ -2,7 +2,7 @@
 // as there's probably some internal ContextAPI hook usage going on considering how dynamic it is.
 "use client";
 
-import { ChangeEvent, useState, useEffect, Suspense, lazy } from "react";
+import { ChangeEvent, useState, useEffect, lazy } from "react";
 
 import Link from "next/link";
 
@@ -25,10 +25,10 @@ import TextFieldSkeleton from "@/app/components/Skeletons/TextFieldSkeleton";
 
 // Import statements
 
-// Define a lazy-loaded version of ThemeProvider using React.lazy()
-const LazyThemeProvider = lazy(
-  () => import("@mui/material/styles/ThemeProvider")
-);
+// // Define a lazy-loaded version of ThemeProvider using React.lazy()
+// const LazyThemeProvider = lazy(
+//   () => import("@mui/material/styles/ThemeProvider")
+// );
 
 export interface QuotePayload {
   quote: string;
@@ -43,6 +43,7 @@ const QuoteCreationPage = () => {
   const [user, setUser] = useState<DocumentData | null>();
   const [uid, setUid] = useState<string>("");
   const [isOriginalQuote, setIsOriginalQuote] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
   const outerTheme = useTheme();
@@ -78,6 +79,7 @@ const QuoteCreationPage = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = firebaseAuth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUid(currentUser.uid);
@@ -89,6 +91,9 @@ const QuoteCreationPage = () => {
         console.error("User not found");
         router.push("/login");
       }
+
+      setLoading(false);
+      return () => unsubscribe();
     });
 
     return () => unsubscribe();
@@ -143,8 +148,10 @@ const QuoteCreationPage = () => {
         autoComplete="off"
       >
         <div className="mt-6 px-8 flex justify-center">
-          <Suspense fallback={<TextFieldSkeleton />}>
-            <LazyThemeProvider theme={customTheme(outerTheme)}>
+          {loading ? (
+            <TextFieldSkeleton />
+          ) : (
+            <ThemeProvider theme={customTheme(outerTheme)}>
               <div style={{ minHeight: "200px" }}>
                 <TextField
                   id="custom-css-outlined-input"
@@ -158,35 +165,41 @@ const QuoteCreationPage = () => {
                   value={quotePayload.quote}
                 />
               </div>
-            </LazyThemeProvider>
-          </Suspense>
+            </ThemeProvider>
+          )}
+        </div>
+
+        <FormGroup className="ml-8">
+          <FormControlLabel
+            className="mt-6"
+            control={
+              <Checkbox checked={isOriginalQuote} onChange={handleChecked} />
+            }
+            label="Is this your quote?"
+          />
+        </FormGroup>
+        <div className="mt-6 px-8 flex justify-center">
+          {loading ? (
+            <TextFieldSkeleton />
+          ) : (
+            <ThemeProvider theme={customTheme(outerTheme)}>
+              <div style={{ minHeight: "200px" }}>
+                <TextField
+                  id="custom-css-outlined-input"
+                  label="Whose quote is it anyway?"
+                  multiline
+                  fullWidth
+                  minRows={4}
+                  variant="standard"
+                  onChange={handleChange}
+                  name="author"
+                  value={quotePayload.author}
+                />
+              </div>
+            </ThemeProvider>
+          )}
         </div>
       </Box>
-      <FormGroup className="ml-8">
-        <FormControlLabel
-          className="mt-6"
-          control={
-            <Checkbox checked={isOriginalQuote} onChange={handleChecked} />
-          }
-          label="Is this your quote?"
-        />
-      </FormGroup>
-      <div className="mt-6 px-8 flex justify-center">
-        {!isOriginalQuote ? (
-          <Suspense fallback={<TextFieldSkeleton />}>
-            <LazyThemeProvider theme={customTheme(outerTheme)}>
-              <TextField
-                label="Whose quote is it anyway?"
-                variant="standard"
-                fullWidth
-                onChange={handleChange}
-                name="author"
-                value={quotePayload.author}
-              />
-            </LazyThemeProvider>
-          </Suspense>
-        ) : null}
-      </div>
     </main>
   );
 };

@@ -11,7 +11,7 @@ const RootContainer = styled("section")(({ theme }) => ({
 const TextFieldSkeleton = () => {
   return (
     <RootContainer>
-      <Skeleton variant="text" className="h-40" />
+      <Skeleton variant="text" className="h-40 min-h-40" />
     </RootContainer>
   );
 };
