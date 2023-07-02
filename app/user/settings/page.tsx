@@ -137,7 +137,7 @@ const SettingsPage = () => {
       <div className="flex justify-center">
         <div className="h-[150px] w-[150px] relative flex">
           <label htmlFor="upload">
-            <div className=" w-full h-full cursor-pointer ">
+            <div className=" w-full h-full cursor-pointer flex items-center">
               <ModeEditIcon className="absolute left-0 right-0 m-auto z-10 flex h-[150px] justify-center  " />
               <div className="absolute justify-center w-full flex place-self-center items-center bg-slate-500  rounded-full  h-full opacity-50 ">
                 <input
