@@ -30,3 +30,16 @@ Once you've executed all the above, open your browser, and go to `localhost:3000
 
 That's it!
 
+
+---
+## Project Walkthroughs
+
+While definitely not mandatory, I thought it'd be nice to include a couple Looms, all of which are under 5 minutes, that just go over a couple features etc:
+
+- [UI Walkthrough](https://www.loom.com/share/052a6532afd3414bac17890c4a1723a3)
+- [Authentication Code Walkthrough](https://www.loom.com/share/2b6239e0e1a944f0b9f69c67dfb09005)
+- [Some basic CRUD functionality](https://www.loom.com/share/40be6bda2f3d409e814565ed9625debc)
+- [Expanding on the real-time feature of our feed using Callbacks inside of an effect](https://www.loom.com/share/eca8b293c15049f780849616987f0780)
+- [A quick look at very light error handling](https://www.loom.com/share/57bac7293a02478eb32ce56bb72a5a1e)
+
+As a reminder, Loom has built in playback speed editing, so I tend to suggest watching at 1.25x speed!
