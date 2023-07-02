@@ -61,9 +61,7 @@ const QuoteCreationPage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("attempting to add quote", { quotePayload });
     user && addQuote(uid, quotePayload);
-    console.log(addQuote(uid, quotePayload));
 
     if (user) {
       try {
