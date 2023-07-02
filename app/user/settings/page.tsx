@@ -136,17 +136,21 @@ const SettingsPage = () => {
 
       <div className="flex justify-center">
         <div className="h-[150px] w-[150px] relative flex">
-          <div className="absolute justify-center w-full flex place-self-center items-center  bg-slate-500 rounded-full  h-full opacity-50"></div>
           <label htmlFor="upload">
-            <ModeEditIcon className="absolute left-0 right-0 m-auto z-10 flex h-[150px] justify-center  place-self-center cursor-pointer" />
-            <input
-              type="file"
-              id="upload"
-              name="profilePicture"
-              className="hidden"
-              onChange={handleChange}
-            />
+            <div className=" w-full h-full cursor-pointer ">
+              <ModeEditIcon className="absolute left-0 right-0 m-auto z-10 flex h-[150px] justify-center  " />
+              <div className="absolute justify-center w-full flex place-self-center items-center bg-slate-500  rounded-full  h-full opacity-50 ">
+                <input
+                  type="file"
+                  id="upload"
+                  name="profilePicture"
+                  className="hidden z-10"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
           </label>
+
           <ProfilePictureIcon
             name={updateProfilePayload.userName}
             imageUrl={imageUrl!}
@@ -163,7 +167,7 @@ const SettingsPage = () => {
               name="userName"
               onChange={handleChange}
               value={updateProfilePayload.userName}
-              className="text-black w-full py-1 rounded"
+              className="text-black w-full py-1 pl-4 rounded"
             />
           </div>
         </div>
