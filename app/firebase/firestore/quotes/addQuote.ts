@@ -51,7 +51,10 @@ export const addQuote = async (uid: string, quotePayload: QuotePayload) => {
     // // `quotes/user_id/quotes[quoteId1, quoteId2, ...]
     // // For now I value being able to simple get all quotes by referencing the shallow level quoteId though.
     await setDoc(quotesDocument, { quotes: updatedQuotes });
+
+    return "successfully added quote!";
   } catch (error) {
     console.error(error);
   }
+  return ">:( try again";
 };

@@ -60,13 +60,23 @@ const QuoteCreationPage = () => {
     setIsOriginalQuote(event.target.checked);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("attempting to add quote", { quotePayload });
     user && addQuote(uid, quotePayload);
     console.log(addQuote(uid, quotePayload));
 
-    setQuotePayload({ quote: "", author: "" });
-    router.push("/feed");
+    if (user) {
+      try {
+        const response = await addQuote(uid, quotePayload);
+
+        if (response) {
+          setQuotePayload({ quote: "", author: "" });
+          router.push("/feed");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   useEffect(() => {
