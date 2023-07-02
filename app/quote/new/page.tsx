@@ -79,7 +79,6 @@ const QuoteCreationPage = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     const unsubscribe = firebaseAuth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUid(currentUser.uid);
@@ -92,7 +91,6 @@ const QuoteCreationPage = () => {
         router.push("/login");
       }
 
-      setLoading(false);
       return () => unsubscribe();
     });
 
@@ -107,6 +105,16 @@ const QuoteCreationPage = () => {
       });
     }
   }, [isOriginalQuote]);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   return (
     <main className="flex flex-col justify-center">
